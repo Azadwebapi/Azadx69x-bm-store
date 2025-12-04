@@ -1,7 +1,8 @@
 {
+  "tiktok": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/tiktok.js",
   "anime": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/anime.js",
-  " slot":"https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/slot.js",
-  "cpanel":"https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/cpanel.js",
+  " slot": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/slot.js",
+  "cpanel": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/cpanel.js",
   "up":"https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/up.js",
   "blackjackimg":"https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/blackjackimg.js",
   "uptime": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/uptime.js",
