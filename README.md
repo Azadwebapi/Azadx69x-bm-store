@@ -113,14 +113,23 @@
 
 ```text
 ✨ 𝕏𝟞𝟡𝕏 𝔹𝕆𝕋 𝕍𝟚 ✨
-© 2024 𝙰𝚣𝚊𝚍𝚇𝟼𝟿𝚇 | 𝙵𝚘𝚛𝚔𝚎𝚍 𝚋𝚢 𝚗𝚌𝚊𝚣𝚊𝚍
-𝙼𝙸𝚃 𝙻𝚒𝚌𝚎𝚗𝚜𝚎
+The MIT License (No Derivatives)
 
-🔗 𝙵𝚘𝚛𝚔 𝚁𝚎𝚙𝚘𝚜𝚒𝚝𝚘𝚛𝚢: https://github.com/ncazad/Azadx69x
-🔗 𝙾𝚛𝚒𝚐𝚒𝚗𝚊𝚕 𝚁𝚎𝚙𝚘: https://github.com/cyber-ullash/CYBER-GOAT-BOT
+Copyright (c) 2022, NTKhang (NTKhang03)
+update by Azadx69x
 
-𝚃𝚑𝚒𝚜 𝚙𝚛𝚘𝚓𝚎𝚌𝚝 𝚒𝚜 𝚏𝚛𝚎𝚎 𝚝𝚘 𝚞𝚜𝚎, 𝚖𝚘𝚍𝚒𝚏𝚢, 𝚊𝚗𝚍 𝚍𝚒𝚜𝚝𝚛𝚒𝚋𝚞𝚝𝚎.
-𝙿𝚕𝚎𝚊𝚜𝚎 𝚖𝚊𝚒𝚗𝚝𝚊𝚒𝚗 𝚌𝚛𝚎𝚍𝚒𝚝𝚜 𝚝𝚘 𝚘𝚛𝚒𝚐𝚒𝚗𝚊𝚕 𝚊𝚞𝚝𝚑𝚘𝚛𝚜.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without modification, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+NO DERIVATIVES: This license does not allow for any modifications or derivative
+works based on the Software.
 ```
 
 ---
