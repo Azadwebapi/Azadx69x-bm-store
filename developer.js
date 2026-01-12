@@ -495,7 +495,7 @@ module.exports = {
             ctx.fill();
             
             ctx.fillStyle = palette.secondary;
-            ctx.fillText('BOT DEVELOPER', infoX + 475, infoY + 90);
+            ctx.fillText('BOT DEVELOPER', infoX + 475, infoY + 50);
             
             currentY += cardHeight + 30;
             
@@ -802,7 +802,7 @@ module.exports = {
         ctx.font = '20px "Segoe UI", Arial, sans-serif';
         ctx.fillStyle = palette.text;
         ctx.textAlign = 'center';
-        ctx.fillText('GoatBot v6.0', canvasWidth / 2, canvasHeight - 30);
+        ctx.fillText('X69X BOT V2', canvasWidth / 2, canvasHeight - 30);
         
         // Save the image
         const imagePath = path.join(__dirname, 'cache', `dev_system_${Date.now()}.png`);
