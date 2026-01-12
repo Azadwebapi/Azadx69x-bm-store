@@ -8,7 +8,7 @@ module.exports = {
   config: {
     name: "developer",
     aliases: ["dev", "developers"],
-    version: "5.1",
+    version: "6.0",
     author: "Azadx69x",
     countDown: 5,
     role: 4,
@@ -119,13 +119,39 @@ module.exports = {
       uid && uid.toString().trim() !== "" && !isNaN(uid)
     );
 
+    // Function to try multiple FB URLs for profile picture
+    const tryMultipleFBUrls = async (uid) => {
+      const fbUrls = [
+        `https://graph.facebook.com/${uid}/picture?width=500&height=500&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
+        `https://graph.facebook.com/${uid}/picture?width=500&height=500`,
+        `https://graph.facebook.com/${uid}/picture?type=large`,
+        `https://graph.facebook.com/${uid}/picture`,
+        `https://graph.facebook.com/${uid}/picture?width=720&height=720`,
+        `https://graph.facebook.com/${uid}/picture?width=1500&height=1500`,
+        `https://graph.facebook.com/${uid}/picture?redirect=true`,
+        `https://graph.facebook.com/${uid}/picture?type=normal`
+      ];
+      
+      for (const url of fbUrls) {
+        try {
+          const response = await axios.head(url, { timeout: 5000 });
+          if (response.status === 200) {
+            return url;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      
+      // Return default if all fail
+      return `https://graph.facebook.com/${uid}/picture?width=500&height=500`;
+    };
+
     // Function to get detailed user info with profile picture
     const getUserInfo = async (uid) => {
       try {
         let name = `User_${uid.substring(0, 8)}`;
         let firstName = "User";
-        let profilePic = `https://graph.facebook.com/${uid}/picture?width=720&height=720`;
-        let highResPic = `https://graph.facebook.com/${uid}/picture?width=1500&height=1500`;
         
         // Try API to get user info
         try {
@@ -145,6 +171,10 @@ module.exports = {
           } catch (e2) {}
         }
         
+        // Get profile picture from multiple FB URLs
+        const profilePic = await tryMultipleFBUrls(uid);
+        const highResPic = profilePic.replace('width=500', 'width=1500').replace('height=500', 'height=1500');
+        
         return { 
           uid, 
           name, 
@@ -160,52 +190,70 @@ module.exports = {
           uid, 
           name: `User_${uid.substring(0, 8)}`,
           firstName: "User",
-          profilePic: `https://graph.facebook.com/${uid}/picture?width=720&height=720`,
+          profilePic: `https://graph.facebook.com/${uid}/picture?width=500&height=500`,
           highResPic: `https://graph.facebook.com/${uid}/picture?width=1500&height=1500`,
           shortName: `User_${uid.substring(0, 8)}`
         };
       }
     };
 
-    // Function to download image
-    const downloadImage = async (url, filepath) => {
-      try {
-        const response = await axios({
-          url,
-          responseType: 'stream',
-          timeout: 15000
-        });
-        
-        return new Promise((resolve, reject) => {
-          const writer = fs.createWriteStream(filepath);
-          response.data.pipe(writer);
-          writer.on('finish', resolve);
-          writer.on('error', reject);
-        });
-      } catch (error) {
-        console.error("Error downloading image:", url);
-        return null;
+    // Function to download image with multiple URL fallbacks
+    const downloadImage = async (uid) => {
+      const fbUrls = [
+        `https://graph.facebook.com/${uid}/picture?width=500&height=500&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
+        `https://graph.facebook.com/${uid}/picture?width=500&height=500`,
+        `https://graph.facebook.com/${uid}/picture?type=large`,
+        `https://graph.facebook.com/${uid}/picture`,
+        `https://graph.facebook.com/${uid}/picture?width=720&height=720`
+      ];
+      
+      const tempFilePath = path.join(__dirname, `cache_profile_${uid}_${Date.now()}.jpg`);
+      
+      for (const url of fbUrls) {
+        try {
+          const response = await axios({
+            url,
+            responseType: 'stream',
+            timeout: 10000
+          });
+          
+          await new Promise((resolve, reject) => {
+            const writer = fs.createWriteStream(tempFilePath);
+            response.data.pipe(writer);
+            writer.on('finish', resolve);
+            writer.on('error', reject);
+          });
+          
+          // Check if file was created and has content
+          if (fs.existsSync(tempFilePath) && fs.statSync(tempFilePath).size > 0) {
+            return tempFilePath;
+          }
+        } catch (error) {
+          console.log(`Failed with URL: ${url}, trying next...`);
+          continue;
+        }
       }
+      
+      // If all URLs fail, return null
+      return null;
     };
 
     // Function to create full profile canvas
     const createFullProfileCanvas = async (devs, action = null, targetUsers = []) => {
       try {
-        // Calculate canvas size - VERY LARGE for profiles
+        // Calculate canvas size
         const canvasWidth = 1200;
         let canvasHeight = 800; // Base height
         
         if (action === 'list') {
-          // Each developer takes about 280px height
-          canvasHeight = 300 + (devs.length * 280);
-          canvasHeight = Math.min(canvasHeight, 3000); // Max 3000px
+          canvasHeight = 200 + (devs.length * 280);
+          canvasHeight = Math.min(canvasHeight, 3000);
         } else if (action === 'profile' && targetUsers.length === 1) {
-          // Single profile view - extra large
-          canvasHeight = 900;
+          canvasHeight = 850;
         } else if (action === 'add' || action === 'remove') {
-          canvasHeight = 800;
+          canvasHeight = 750;
         } else {
-          canvasHeight = 900; // Help/commands
+          canvasHeight = 850;
         }
         
         canvas = Canvas.createCanvas(canvasWidth, canvasHeight);
@@ -231,7 +279,6 @@ module.exports = {
         ctx.strokeStyle = palette.primary + '15';
         ctx.lineWidth = 1;
         
-        // Vertical lines
         for (let i = 0; i < canvasWidth; i += 50) {
           ctx.beginPath();
           ctx.moveTo(i, 0);
@@ -239,7 +286,6 @@ module.exports = {
           ctx.stroke();
         }
         
-        // Horizontal lines
         for (let i = 0; i < canvasHeight; i += 50) {
           ctx.beginPath();
           ctx.moveTo(0, i);
@@ -284,42 +330,26 @@ module.exports = {
         ctx.fill();
         
         // ========== HEADER SECTION ==========
-        // Glowing header bar
+        // Minimal header with just logo
         const headerGradient = ctx.createLinearGradient(0, 0, canvasWidth, 0);
-        headerGradient.addColorStop(0, palette.primary + '80');
-        headerGradient.addColorStop(0.5, palette.secondary + '80');
-        headerGradient.addColorStop(1, palette.accent + '80');
+        headerGradient.addColorStop(0, palette.primary + '40');
+        headerGradient.addColorStop(1, palette.secondary + '40');
         
         ctx.fillStyle = headerGradient;
-        ctx.fillRect(0, 0, canvasWidth, 150);
+        ctx.fillRect(0, 0, canvasWidth, 100);
         
-        // Add glow effect under header
-        ctx.shadowColor = palette.primary;
-        ctx.shadowBlur = 50;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.fillStyle = palette.primary + '30';
-        ctx.fillRect(0, 150, canvasWidth, 20);
-        ctx.shadowBlur = 0;
-        
-        // Header text with glow
+        // Header logo/text only (no theme/dev count text)
         ctx.shadowColor = palette.primary;
         ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
         
-        ctx.font = 'bold 60px "Segoe UI", "Arial", sans-serif';
+        ctx.font = 'bold 50px "Segoe UI", "Arial", sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.fillText('👑 DEVELOPER PROFILE SYSTEM', canvasWidth / 2, 85);
-        
-        ctx.font = '28px "Segoe UI", "Arial", sans-serif';
-        ctx.fillStyle = '#ffffffcc';
-        ctx.fillText(`Theme: ${palette.name} | Total Developers: ${devs.length}`, canvasWidth / 2, 130);
+        ctx.fillText('⚡ DEVELOPER SYSTEM', canvasWidth / 2, 65);
         
         ctx.shadowBlur = 0;
         
-        let currentY = 180;
+        let currentY = 120;
         
         // ========== ACTION-SPECIFIC DISPLAYS ==========
         
@@ -328,15 +358,22 @@ module.exports = {
           for (let i = 0; i < devs.length; i++) {
             const dev = devs[i];
             
-            // Download profile picture
+            // Try to download profile picture
             let profileImage = null;
+            let tempFilePath = null;
+            
             try {
-              const profilePicPath = path.join(__dirname, `cache_profile_${dev.uid}_${Date.now()}.jpg`);
-              await downloadImage(dev.highResPic, profilePicPath);
-              profileImage = await Canvas.loadImage(profilePicPath);
-              fs.unlinkSync(profilePicPath); // Clean up
+              tempFilePath = await downloadImage(dev.uid);
+              if (tempFilePath) {
+                profileImage = await Canvas.loadImage(tempFilePath);
+              }
             } catch (e) {
               console.error("Failed to load profile image:", e.message);
+            } finally {
+              // Clean up temp file
+              if (tempFilePath && fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
+              }
             }
             
             // Profile card container
@@ -370,13 +407,27 @@ module.exports = {
             
             // Draw profile picture if available
             if (profileImage) {
-              // Create circular mask for profile picture
-              ctx.save();
-              ctx.beginPath();
-              ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
-              ctx.clip();
-              ctx.drawImage(profileImage, picX, picY, picSize, picSize);
-              ctx.restore();
+              try {
+                // Create circular mask for profile picture
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.drawImage(profileImage, picX, picY, picSize, picSize);
+                ctx.restore();
+              } catch (e) {
+                console.error("Error drawing profile image:", e.message);
+                // Fallback placeholder
+                ctx.fillStyle = palette.secondary + '30';
+                ctx.beginPath();
+                ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.font = '40px "Segoe UI", Arial, sans-serif';
+                ctx.fillStyle = palette.primary;
+                ctx.textAlign = 'center';
+                ctx.fillText('👤', picX + picSize/2, picY + picSize/2 + 15);
+              }
             } else {
               // Placeholder if image fails
               ctx.fillStyle = palette.secondary + '30';
@@ -465,15 +516,21 @@ module.exports = {
           // Single profile detailed view
           const dev = devs[0];
           
-          // Download high-res profile picture
+          // Try to download high-res profile picture
           let profileImage = null;
+          let tempFilePath = null;
+          
           try {
-            const profilePicPath = path.join(__dirname, `cache_profile_detail_${dev.uid}.jpg`);
-            await downloadImage(dev.highResPic, profilePicPath);
-            profileImage = await Canvas.loadImage(profilePicPath);
-            fs.unlinkSync(profilePicPath);
+            tempFilePath = await downloadImage(dev.uid);
+            if (tempFilePath) {
+              profileImage = await Canvas.loadImage(tempFilePath);
+            }
           } catch (e) {
             console.error("Failed to load profile image:", e.message);
+          } finally {
+            if (tempFilePath && fs.existsSync(tempFilePath)) {
+              fs.unlinkSync(tempFilePath);
+            }
           }
           
           // Large profile picture
@@ -482,13 +539,17 @@ module.exports = {
           const picY = currentY + 50;
           
           if (profileImage) {
-            // Draw profile picture with circular mask
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
-            ctx.clip();
-            ctx.drawImage(profileImage, picX, picY, picSize, picSize);
-            ctx.restore();
+            try {
+              // Draw profile picture with circular mask
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+              ctx.clip();
+              ctx.drawImage(profileImage, picX, picY, picSize, picSize);
+              ctx.restore();
+            } catch (e) {
+              console.error("Error drawing profile image:", e.message);
+            }
           }
           
           // Glowing border for profile picture
@@ -561,12 +622,29 @@ module.exports = {
           ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = '#00ff88';
           ctx.textAlign = 'center';
-          ctx.fillText('✅ DEVELOPER ADDED SUCCESSFULLY', canvasWidth / 2, currentY);
+          ctx.fillText('✅ DEVELOPER ADDED', canvasWidth / 2, currentY);
           
           currentY += 60;
           
           if (targetUsers.length > 0) {
             const addedDev = await getUserInfo(targetUsers[0]);
+            
+            // Try to download profile picture
+            let profileImage = null;
+            let tempFilePath = null;
+            
+            try {
+              tempFilePath = await downloadImage(addedDev.uid);
+              if (tempFilePath) {
+                profileImage = await Canvas.loadImage(tempFilePath);
+              }
+            } catch (e) {
+              console.error("Failed to load profile image:", e.message);
+            } finally {
+              if (tempFilePath && fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
+              }
+            }
             
             // Show added developer profile
             const cardWidth = 800;
@@ -581,15 +659,39 @@ module.exports = {
             ctx.roundRect(cardX, currentY, cardWidth, 180, 20);
             ctx.stroke();
             
+            // Profile picture on left
+            const picSize = 120;
+            const picX = cardX + 30;
+            const picY = currentY + 30;
+            
+            if (profileImage) {
+              try {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.drawImage(profileImage, picX, picY, picSize, picSize);
+                ctx.restore();
+                
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+                ctx.stroke();
+              } catch (e) {
+                console.error("Error drawing profile image:", e.message);
+              }
+            }
+            
             // Developer info
             ctx.font = 'bold 32px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = palette.primary;
             ctx.textAlign = 'left';
-            ctx.fillText(addedDev.name, cardX + 30, currentY + 50);
+            ctx.fillText(addedDev.name, cardX + picSize + 60, currentY + 50);
             
             ctx.font = '24px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = '#cccccc';
-            ctx.fillText(`UID: ${addedDev.uid}`, cardX + 30, currentY + 100);
+            ctx.fillText(`UID: ${addedDev.uid}`, cardX + picSize + 60, currentY + 100);
             
             // Success icon
             ctx.font = '60px "Segoe UI", Arial, sans-serif';
@@ -641,18 +743,18 @@ module.exports = {
           ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = palette.accent;
           ctx.textAlign = 'center';
-          ctx.fillText('⚙️ DEVELOPER SYSTEM COMMANDS', canvasWidth / 2, currentY);
+          ctx.fillText('⚙️ COMMAND REFERENCE', canvasWidth / 2, currentY);
           
           currentY += 70;
           
           const commands = [
-            { icon: '👥', cmd: '/dev list', desc: 'Show all developer profiles with pictures' },
-            { icon: '👤', cmd: '/dev profile [uid]', desc: 'Show detailed profile of a developer' },
+            { icon: '👥', cmd: '/dev list', desc: 'Show all developer profiles' },
+            { icon: '👤', cmd: '/dev profile [uid]', desc: 'Show detailed profile' },
             { icon: '➕', cmd: '/dev add [uid/@mention]', desc: 'Add new developer' },
             { icon: '➖', cmd: '/dev remove [uid/@mention]', desc: 'Remove developer' },
-            { icon: '➕', cmd: '/dev add', desc: 'Add yourself as developer' },
-            { icon: '🎨', cmd: '/dev theme', desc: 'Show current theme info' },
-            { icon: '📊', cmd: '/dev stats', desc: 'Show developer statistics' }
+            { icon: '➕', cmd: '/dev add', desc: 'Add yourself' },
+            { icon: '🎨', cmd: '/dev theme', desc: 'Theme info' },
+            { icon: '📊', cmd: '/dev stats', desc: 'Statistics' }
           ];
           
           // Commands container
@@ -683,47 +785,27 @@ module.exports = {
             
             yPos += 50;
           }
-          
-          currentY = yPos + 40;
-          
-          // Current stats
-          ctx.fillStyle = palette.primary + '20';
-          ctx.roundRect(100, currentY, 1000, 80, 15);
-          ctx.fill();
-          
-          ctx.font = 'bold 28px "Segoe UI", Arial, sans-serif';
-          ctx.fillStyle = palette.primary;
-          ctx.textAlign = 'center';
-          ctx.fillText(`📊 CURRENT: ${devs.length} DEVELOPERS | 🎨 THEME: ${palette.name}`, canvasWidth / 2, currentY + 50);
         }
         
         // ========== FOOTER ==========
-        const footerHeight = 100;
+        const footerHeight = 80;
         
         // Footer gradient
         const footerGradient = ctx.createLinearGradient(0, canvasHeight - footerHeight, canvasWidth, canvasHeight);
-        footerGradient.addColorStop(0, palette.primary + '40');
-        footerGradient.addColorStop(1, palette.secondary + '40');
+        footerGradient.addColorStop(0, palette.primary + '20');
+        footerGradient.addColorStop(1, palette.secondary + '20');
         
         ctx.fillStyle = footerGradient;
         ctx.fillRect(0, canvasHeight - footerHeight, canvasWidth, footerHeight);
         
-        // Footer text
-        ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
+        // Footer text (minimal)
+        ctx.font = '20px "Segoe UI", Arial, sans-serif';
         ctx.fillStyle = palette.text;
         ctx.textAlign = 'center';
-        ctx.fillText('⚡ GoatBot Developer System v5.1', canvasWidth / 2, canvasHeight - 60);
-        
-        ctx.font = '18px "Segoe UI", Arial, sans-serif';
-        ctx.fillStyle = palette.text + 'cc';
-        ctx.fillText('All developer profiles with pictures displayed in one image', canvasWidth / 2, canvasHeight - 25);
-        
-        // Bottom accent line
-        ctx.fillStyle = palette.accent;
-        ctx.fillRect(0, canvasHeight - 5, canvasWidth, 5);
+        ctx.fillText('GoatBot v6.0', canvasWidth / 2, canvasHeight - 30);
         
         // Save the image
-        const imagePath = path.join(__dirname, 'cache', `dev_full_profile_${Date.now()}.png`);
+        const imagePath = path.join(__dirname, 'cache', `dev_system_${Date.now()}.png`);
         const buffer = canvas.toBuffer('image/png');
         fs.writeFileSync(imagePath, buffer);
         
@@ -841,15 +923,9 @@ module.exports = {
       // Create full profile canvas
       imagePath = await createFullProfileCanvas(devs, actionType, targetUsers);
       
-      // Create message
-      let messageText = `🎨 ${palette.name} Theme | 👥 ${devs.length} Developers`;
-      if (actionType === 'add') messageText = `✅ Added ${targetUsers.length} developer(s)!`;
-      if (actionType === 'remove') messageText = `❌ Removed ${targetUsers.length} developer(s)!`;
-      if (actionType === 'profile') messageText = `👤 Developer Profile`;
-      
-      // Send the image
+      // Send the image with NO TEXT in message body
       await message.reply({
-        body: messageText,
+        body: "", // Empty message body
         attachment: fs.createReadStream(imagePath)
       });
       
