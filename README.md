@@ -33,76 +33,10 @@
 <div align="center">
 
 <a href="https://github.com/ncazad/Azadx69x/fork">
-  <img src="https://img.shields.io/badge/✅+FORK-00CED1?style=flat-square&logo=github&logoColor=FFFFFF">
+  <img src="https://img.shields.io/badge/FORK-00CED1?style=flat-square&logo=github&logoColor=FFFFFF">
 </a>
 
 </div>
----
-
-🌟 𝙰𝙱𝙾𝚄𝚃 𝕏𝟞𝟡𝕏 𝔹𝕆𝕋 𝕍𝟚
-
-🚀 𝕏𝟞𝟡𝕏 𝔹𝕆𝕋 𝕍𝟚 𝚒𝚜 𝚊𝚗 𝚞𝚕𝚝𝚛𝚊-𝚏𝚊𝚜𝚝 𝙼𝚎𝚜𝚜𝚎𝚗𝚐𝚎𝚛 𝚋𝚘𝚝 𝚠𝚒𝚝𝚑 𝚊𝚍𝚟𝚊𝚗𝚌𝚎𝚍 𝚏𝚎𝚊𝚝𝚞𝚛𝚎𝚜 𝚊𝚗𝚍 𝚎𝚡𝚌𝚕𝚞𝚜𝚒𝚟𝚎 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜! ✨
-
-𝙵𝙾𝚁𝙺𝙴𝙳 𝙵𝚁𝙾𝙼 𝙲𝚈𝙱𝙴𝚁-𝙶𝙾𝙰𝚃-𝙱𝙾𝚃 & 𝙲𝚄𝚂𝚃𝙾𝙼𝙸𝚉𝙴𝙳 𝙱𝚈 𝙰𝚉𝙰𝙳𝚇𝟼𝟿𝚇
-
-🎯 𝚇𝟼𝟿𝚇 𝙴𝚇𝙲𝙻𝚄𝚂𝙸𝚅𝙴 𝙵𝙴𝙰𝚃𝚄𝚁𝙴𝚂:
-
-· ⚡ 𝟺𝟶% 𝙵𝙰𝚂𝚃𝙴𝚁 𝚃𝙷𝙰𝙽 𝙾𝚁𝙸𝙶𝙸𝙽𝙰𝙻
-· 🔥 𝙰𝙳𝚅𝙰𝙽𝙲𝙴𝙳 𝙰𝙳𝙼𝙸𝙽 𝙿𝙰𝙽𝙴𝙻
-· 🎨 𝙲𝚄𝚂𝚃𝙾𝙼 𝚃𝙷𝙴𝙼𝙴 𝚂𝚈𝚂𝚃𝙴𝙼
-· 🛡️ 𝙴𝙽𝙷𝙰𝙽𝙲𝙴𝙳 𝚂𝙴𝙲𝚄𝚁𝙸𝚃𝚈
-· 🤖 𝙰𝙸-𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂
-· 📊 𝚁𝙴𝙰𝙻-𝚃𝙸𝙼𝙴 𝙰𝙽𝙰𝙻𝚈𝚃𝙸𝙲𝚂
-
----
-
-🚀 𝙳𝙴𝙿𝙻𝙾𝚈𝙼𝙴𝙽𝚃 𝙾𝙿𝚃𝙸𝙾𝙽𝚂
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/🟣+𝙷𝙴𝚁𝙾𝙺𝚄-430098?style=for-the-badge&logo=heroku&logoColor=white"></td>
-      <td align="center">
-        <a href="https://dashboard.heroku.com/new-app?template=https://github.com/ncazad/Azadx69x">
-          <img src="https://img.shields.io/badge/⚡+𝙳𝙴𝙿𝙻𝙾𝚈+𝙾𝙽+𝙷𝙴𝚁𝙾𝙺𝚄-purple?style=for-the-badge&logo=heroku">
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/🔵+𝚁𝙴𝙿𝙻𝙸𝚃-F26207?style=for-the-badge&logo=replit&logoColor=white"></td>
-      <td align="center">
-        <a href="https://repl.it/github/ncazad/Azadx69x">
-          <img src="https://img.shields.io/badge/🚀+𝙳𝙴𝙿𝙻𝙾𝚈+𝙾𝙽+𝚁𝙴𝙿𝙻𝙸𝚃-orange?style=for-the-badge&logo=replit">
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/⚫+𝙺𝙾𝚈𝙴𝙱-121212?style=for-the-badge&logo=koyeb&logoColor=white"></td>
-      <td align="center">
-        <a href="https://app.koyeb.com/services/deploy?type=git&repository=https://github.com/ncazad/Azadx69x&branch=main">
-          <img src="https://img.shields.io/badge/🌙+𝙳𝙴𝙿𝙻𝙾𝚈+𝙾𝙽+𝙺𝙾𝚈𝙴𝙱-black?style=for-the-badge&logo=koyeb">
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/🚂+𝚁𝙰𝙸𝙻𝚆𝙰𝚈-0B0D0E?style=for-the-badge&logo=railway&logoColor=white"></td>
-      <td align="center">
-        <a href="https://railway.app/new">
-          <img src="https://img.shields.io/badge/🎯+𝙳𝙴𝙿𝙻𝙾𝚈+𝙾𝙽+𝚁𝙰𝙸𝙻𝚆𝙰𝚇-darkblue?style=for-the-badge&logo=railway">
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/🌈+𝚁𝙴𝙽𝙳𝙴𝚁-46E3B7?style=for-the-badge&logo=render&logoColor=white"></td>
-      <td align="center">
-        <a href="https://dashboard.render.com">
-          <img src="https://img.shields.io/badge/✨+𝙳𝙴𝙿𝙻𝙾𝚈+𝙾𝙽+𝚁𝙴𝙽𝙳𝙴𝚁-teal?style=for-the-badge&logo=render">
-        </a>
-      </td>
-    </tr>
-  </table>
-</div>
-
 ---
 
 🛠️ 𝚀𝚄𝙸𝙲𝙺 𝚂𝚃𝙰𝚁𝚃
