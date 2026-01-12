@@ -140,6 +140,29 @@ works based on the Software.
 
 ---
 
+## 📶 GitHub Stats
+
+
+<p align="center">
+  <img src="https://github-readme-stats-beryl-chi-76.vercel.app/api/top-langs/?username=ncazad&langs_count=8&theme=react&bg_color=151515" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/ncazad">
+    <img alt="Ncazad's Github Stats"
+      src="https://github-readme-stats-beryl-chi-76.vercel.app/api?username=ncazad&show_icons=true&count_private=true&theme=react&bg_color=151515" />
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://github-readme-streak-stats-opal-ten-98.vercel.app/?user=ncazad&theme=black-ice"
+    alt="ncazad"/>
+</p>
+
+<br/>
+
+---
+
 <div align="center">
 
 💫 THANK YOU FOR USING! 🖤
