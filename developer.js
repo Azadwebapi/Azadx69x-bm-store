@@ -7,28 +7,17 @@ const path = require('path');
 module.exports = {
   config: {
     name: "developer",
-    aliases: ["dev"],
-    version: "4.0",
+    aliases: ["dev", "developers"],
+    version: "5.1",
     author: "Azadx69x",
     countDown: 5,
     role: 4,
     description: {
-      en: "Add, remove developer role with colorful canvas display"
+      en: "Developer management with full profile display"
     },
     category: "owner",
     guide: {
-      en: "{pn} [add/remove/list/canvas] [uid/@tag/reply]"
-    }
-  },
-
-  langs: {
-    en: {
-      added: "✅ | Added developer role for %1 users:\n%2",
-      alreadyDev: "\n⚠️ | %1 users already have developer role:\n%2",
-      missingIdAdd: "⚠️ | Reply / tag / UID required to add developer",
-      removed: "✅ | Removed developer role of %1 users:\n%2",
-      notDev: "⚠️ | %1 users don't have developer role:\n%2",
-      missingIdRemove: "⚠️ | Reply / tag / UID required to remove developer"
+      en: "{pn} [add/remove/list/profile] [uid/@tag/reply]"
     }
   },
 
@@ -56,57 +45,57 @@ module.exports = {
       return message.reply("⚠️ | Canvas module not installed. Please install it with: npm install canvas");
     }
 
-    // 5 Random Color Palettes
+    // 5 Color Palettes for different moods
     const colorPalettes = [
       {
-        name: "Neon Cyberpunk",
-        primary: "#00ff88",
-        secondary: "#ff00ff",
-        accent: "#00ffff",
-        bgStart: "#0a0a2a",
-        bgEnd: "#1a1a3a",
+        name: "Matrix Green",
+        primary: "#00ff41",
+        secondary: "#008f11",
+        accent: "#03a062",
+        bgStart: "#0a0a0a",
+        bgEnd: "#001a00",
         text: "#ffffff",
-        cardBg: "rgba(255, 255, 255, 0.05)"
+        cardBg: "rgba(0, 255, 65, 0.1)"
       },
       {
-        name: "Sunset Gradient",
-        primary: "#ff6b6b",
-        secondary: "#ffa726",
-        accent: "#ffeb3b",
-        bgStart: "#1a237e",
-        bgEnd: "#311b92",
+        name: "Cyber Purple",
+        primary: "#9d00ff",
+        secondary: "#6a00ff",
+        accent: "#b388eb",
+        bgStart: "#0a001a",
+        bgEnd: "#1a0035",
         text: "#ffffff",
-        cardBg: "rgba(255, 255, 255, 0.07)"
+        cardBg: "rgba(157, 0, 255, 0.1)"
+      },
+      {
+        name: "Neon Red",
+        primary: "#ff003c",
+        secondary: "#ff002b",
+        accent: "#ff6b9d",
+        bgStart: "#1a000a",
+        bgEnd: "#350014",
+        text: "#ffffff",
+        cardBg: "rgba(255, 0, 60, 0.1)"
       },
       {
         name: "Ocean Blue",
-        primary: "#4fc3f7",
-        secondary: "#29b6f6",
-        accent: "#00e5ff",
-        bgStart: "#0d47a1",
-        bgEnd: "#1565c0",
+        primary: "#00b4d8",
+        secondary: "#0077b6",
+        accent: "#90e0ef",
+        bgStart: "#000814",
+        bgEnd: "#001d3d",
         text: "#ffffff",
-        cardBg: "rgba(255, 255, 255, 0.06)"
+        cardBg: "rgba(0, 180, 216, 0.1)"
       },
       {
-        name: "Forest Green",
-        primary: "#66bb6a",
-        secondary: "#43a047",
-        accent: "#a5d6a7",
-        bgStart: "#1b5e20",
-        bgEnd: "#2e7d32",
+        name: "Gold Elite",
+        primary: "#ffd700",
+        secondary: "#daa520",
+        accent: "#fffacd",
+        bgStart: "#1a1300",
+        bgEnd: "#2a2000",
         text: "#ffffff",
-        cardBg: "rgba(255, 255, 255, 0.06)"
-      },
-      {
-        name: "Royal Purple",
-        primary: "#ab47bc",
-        secondary: "#8e24aa",
-        accent: "#e1bee7",
-        bgStart: "#4a148c",
-        bgEnd: "#6a1b9a",
-        text: "#ffffff",
-        cardBg: "rgba(255, 255, 255, 0.06)"
+        cardBg: "rgba(255, 215, 0, 0.1)"
       }
     ];
 
@@ -130,17 +119,20 @@ module.exports = {
       uid && uid.toString().trim() !== "" && !isNaN(uid)
     );
 
-    // Function to get user info
+    // Function to get detailed user info with profile picture
     const getUserInfo = async (uid) => {
       try {
         let name = `User_${uid.substring(0, 8)}`;
+        let firstName = "User";
         let profilePic = `https://graph.facebook.com/${uid}/picture?width=720&height=720`;
+        let highResPic = `https://graph.facebook.com/${uid}/picture?width=1500&height=1500`;
         
         // Try API to get user info
         try {
           const userInfo = await api.getUserInfo(uid);
           if (userInfo && userInfo[uid]) {
-            name = userInfo[uid].name || userInfo[uid].firstName || name;
+            name = userInfo[uid].name || name;
+            firstName = userInfo[uid].firstName || firstName;
           }
         } catch (e) {
           // Try usersData as fallback
@@ -148,18 +140,29 @@ module.exports = {
             const userData = await usersData.get(uid);
             if (userData && userData.name && userData.name !== "Unknown User") {
               name = userData.name;
+              firstName = name.split(' ')[0] || firstName;
             }
           } catch (e2) {}
         }
         
-        return { uid, name, profilePic };
+        return { 
+          uid, 
+          name, 
+          firstName,
+          profilePic,
+          highResPic,
+          shortName: name.length > 15 ? name.substring(0, 15) + '...' : name
+        };
         
       } catch (error) {
         console.error("Error getting user info for", uid, error.message);
         return { 
           uid, 
           name: `User_${uid.substring(0, 8)}`,
-          profilePic: `https://graph.facebook.com/${uid}/picture?width=720&height=720`
+          firstName: "User",
+          profilePic: `https://graph.facebook.com/${uid}/picture?width=720&height=720`,
+          highResPic: `https://graph.facebook.com/${uid}/picture?width=1500&height=1500`,
+          shortName: `User_${uid.substring(0, 8)}`
         };
       }
     };
@@ -170,7 +173,7 @@ module.exports = {
         const response = await axios({
           url,
           responseType: 'stream',
-          timeout: 10000
+          timeout: 15000
         });
         
         return new Promise((resolve, reject) => {
@@ -185,347 +188,452 @@ module.exports = {
       }
     };
 
-    // Function to create colorful canvas
-    const createColorfulCanvas = async (devs, action = null, targetUsers = []) => {
+    // Function to create full profile canvas
+    const createFullProfileCanvas = async (devs, action = null, targetUsers = []) => {
       try {
-        // Create canvas with random size based on content
-        let canvasWidth = 1000;
-        let canvasHeight = 600;
+        // Calculate canvas size - VERY LARGE for profiles
+        const canvasWidth = 1200;
+        let canvasHeight = 800; // Base height
         
-        if (action === 'list' && devs.length > 0) {
-          canvasHeight = 200 + (Math.ceil(devs.length / 2) * 140);
-          canvasHeight = Math.min(canvasHeight, 1500);
+        if (action === 'list') {
+          // Each developer takes about 280px height
+          canvasHeight = 300 + (devs.length * 280);
+          canvasHeight = Math.min(canvasHeight, 3000); // Max 3000px
+        } else if (action === 'profile' && targetUsers.length === 1) {
+          // Single profile view - extra large
+          canvasHeight = 900;
         } else if (action === 'add' || action === 'remove') {
-          canvasHeight = 700;
-        } else if (action === 'help') {
           canvasHeight = 800;
+        } else {
+          canvasHeight = 900; // Help/commands
         }
         
         canvas = Canvas.createCanvas(canvasWidth, canvasHeight);
         ctx = canvas.getContext('2d');
         
-        // Create gradient background
+        // Create DARK gradient background
         const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
         gradient.addColorStop(0, palette.bgStart);
+        gradient.addColorStop(0.5, '#000000');
         gradient.addColorStop(1, palette.bgEnd);
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         
-        // Add abstract shapes for style
-        ctx.fillStyle = palette.primary + '20'; // 20% opacity
-        for (let i = 0; i < 15; i++) {
+        // Add subtle noise texture
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.01)';
+        for (let i = 0; i < 5000; i++) {
           const x = Math.random() * canvasWidth;
           const y = Math.random() * canvasHeight;
-          const size = Math.random() * 100 + 50;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.fillRect(x, y, 1, 1);
         }
         
-        // Draw decorative geometric patterns
-        ctx.strokeStyle = palette.accent + '30';
+        // Add geometric grid pattern
+        ctx.strokeStyle = palette.primary + '15';
         ctx.lineWidth = 1;
-        for (let i = 0; i < 10; i++) {
-          const x = Math.random() * canvasWidth;
-          const y = Math.random() * canvasHeight;
-          const size = Math.random() * 80 + 20;
-          
+        
+        // Vertical lines
+        for (let i = 0; i < canvasWidth; i += 50) {
           ctx.beginPath();
-          ctx.moveTo(x, y);
-          for (let j = 0; j < 6; j++) {
-            const angle = (j * 60 * Math.PI) / 180;
-            const px = x + size * Math.cos(angle);
-            const py = y + size * Math.sin(angle);
-            ctx.lineTo(px, py);
-          }
-          ctx.closePath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i, canvasHeight);
           ctx.stroke();
         }
         
-        // Draw top decorative wave
-        ctx.fillStyle = palette.primary + '40';
+        // Horizontal lines
+        for (let i = 0; i < canvasHeight; i += 50) {
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.lineTo(canvasWidth, i);
+          ctx.stroke();
+        }
+        
+        // Draw decorative corner accents
+        const cornerSize = 150;
+        ctx.fillStyle = palette.primary + '30';
+        
+        // Top-left
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        for (let i = 0; i < canvasWidth; i += 20) {
-          const y = Math.sin(i * 0.01) * 15;
-          ctx.lineTo(i, y);
-        }
-        ctx.lineTo(canvasWidth, 0);
+        ctx.lineTo(cornerSize, 0);
+        ctx.lineTo(0, cornerSize);
         ctx.closePath();
         ctx.fill();
         
-        // Main header with gradient
+        // Top-right
+        ctx.beginPath();
+        ctx.moveTo(canvasWidth, 0);
+        ctx.lineTo(canvasWidth - cornerSize, 0);
+        ctx.lineTo(canvasWidth, cornerSize);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Bottom-left
+        ctx.beginPath();
+        ctx.moveTo(0, canvasHeight);
+        ctx.lineTo(cornerSize, canvasHeight);
+        ctx.lineTo(0, canvasHeight - cornerSize);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Bottom-right
+        ctx.beginPath();
+        ctx.moveTo(canvasWidth, canvasHeight);
+        ctx.lineTo(canvasWidth - cornerSize, canvasHeight);
+        ctx.lineTo(canvasWidth, canvasHeight - cornerSize);
+        ctx.closePath();
+        ctx.fill();
+        
+        // ========== HEADER SECTION ==========
+        // Glowing header bar
         const headerGradient = ctx.createLinearGradient(0, 0, canvasWidth, 0);
-        headerGradient.addColorStop(0, palette.primary);
-        headerGradient.addColorStop(0.5, palette.secondary);
-        headerGradient.addColorStop(1, palette.accent);
+        headerGradient.addColorStop(0, palette.primary + '80');
+        headerGradient.addColorStop(0.5, palette.secondary + '80');
+        headerGradient.addColorStop(1, palette.accent + '80');
         
         ctx.fillStyle = headerGradient;
-        ctx.fillRect(0, 0, canvasWidth, 120);
+        ctx.fillRect(0, 0, canvasWidth, 150);
         
-        // Add header pattern
-        ctx.fillStyle = '#ffffff20';
-        for (let i = 0; i < canvasWidth; i += 40) {
-          ctx.beginPath();
-          ctx.arc(i, 60, 10, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        // Header text with shadow
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
-        
-        ctx.font = 'bold 45px "Segoe UI", Arial, sans-serif';
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.fillText('🚀 DEVELOPER CONTROL PANEL', canvasWidth / 2, 65);
-        
-        ctx.font = '22px "Segoe UI", Arial, sans-serif';
-        ctx.fillStyle = '#ffffffcc';
-        ctx.fillText(`Theme: ${palette.name} | ${devs.length} Active Developers`, canvasWidth / 2, 100);
-        
+        // Add glow effect under header
+        ctx.shadowColor = palette.primary;
+        ctx.shadowBlur = 50;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.fillStyle = palette.primary + '30';
+        ctx.fillRect(0, 150, canvasWidth, 20);
         ctx.shadowBlur = 0;
+        
+        // Header text with glow
+        ctx.shadowColor = palette.primary;
+        ctx.shadowBlur = 20;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         
-        let currentY = 150;
+        ctx.font = 'bold 60px "Segoe UI", "Arial", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText('👑 DEVELOPER PROFILE SYSTEM', canvasWidth / 2, 85);
         
-        // ========== ACTION DISPLAYS ==========
+        ctx.font = '28px "Segoe UI", "Arial", sans-serif';
+        ctx.fillStyle = '#ffffffcc';
+        ctx.fillText(`Theme: ${palette.name} | Total Developers: ${devs.length}`, canvasWidth / 2, 130);
+        
+        ctx.shadowBlur = 0;
+        
+        let currentY = 180;
+        
+        // ========== ACTION-SPECIFIC DISPLAYS ==========
         
         if (action === 'list') {
-          // Title with icon
-          ctx.font = 'bold 38px "Segoe UI", Arial, sans-serif';
-          ctx.fillStyle = palette.secondary;
-          ctx.textAlign = 'left';
-          ctx.fillText('👥 DEVELOPER TEAM ROSTER', 50, currentY);
-          
-          currentY += 60;
-          
-          if (devs.length === 0) {
-            // Empty state design
-            ctx.fillStyle = palette.cardBg;
-            ctx.roundRect(100, currentY, 800, 200, 20);
-            ctx.fill();
+          // Create profile card for each developer
+          for (let i = 0; i < devs.length; i++) {
+            const dev = devs[i];
             
-            ctx.strokeStyle = palette.primary;
-            ctx.lineWidth = 2;
-            ctx.roundRect(100, currentY, 800, 200, 20);
-            ctx.stroke();
-            
-            ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.primary;
-            ctx.textAlign = 'center';
-            ctx.fillText('📭 NO DEVELOPERS FOUND', canvasWidth / 2, currentY + 100);
-            
-            ctx.font = '24px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.text;
-            ctx.fillText('Use /dev add to add yourself as developer', canvasWidth / 2, currentY + 150);
-            
-            currentY += 250;
-          } else {
-            // Developer grid with colorful cards
-            const devsPerRow = 2;
-            const cardWidth = 430;
-            const cardHeight = 130;
-            const cardSpacing = 40;
-            
-            for (let i = 0; i < devs.length; i++) {
-              const dev = devs[i];
-              const row = Math.floor(i / devsPerRow);
-              const col = i % devsPerRow;
-              
-              const x = 50 + (col * (cardWidth + cardSpacing));
-              const y = currentY + (row * (cardHeight + 20));
-              
-              // Random card color from palette
-              const cardColors = [palette.primary, palette.secondary, palette.accent];
-              const cardColor = cardColors[i % 3];
-              
-              // Card background with gradient
-              const cardGradient = ctx.createLinearGradient(x, y, x + cardWidth, y + cardHeight);
-              cardGradient.addColorStop(0, cardColor + '30');
-              cardGradient.addColorStop(1, cardColor + '10');
-              
-              ctx.fillStyle = cardGradient;
-              ctx.roundRect(x, y, cardWidth, cardHeight, 15);
-              ctx.fill();
-              
-              // Card border
-              ctx.strokeStyle = cardColor;
-              ctx.lineWidth = 3;
-              ctx.roundRect(x, y, cardWidth, cardHeight, 15);
-              ctx.stroke();
-              
-              // Number badge with gradient
-              const badgeGradient = ctx.createLinearGradient(x + 15, y + 15, x + 55, y + 55);
-              badgeGradient.addColorStop(0, cardColor);
-              badgeGradient.addColorStop(1, palette.secondary);
-              
-              ctx.fillStyle = badgeGradient;
-              ctx.roundRect(x + 15, y + 15, 40, 40, 8);
-              ctx.fill();
-              
-              // Number
-              ctx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
-              ctx.fillStyle = '#ffffff';
-              ctx.textAlign = 'center';
-              ctx.fillText(`${i + 1}`, x + 35, y + 43);
-              
-              // Developer info
-              ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
-              ctx.fillStyle = palette.text;
-              ctx.textAlign = 'left';
-              
-              // Truncate long names
-              let displayName = dev.name;
-              if (displayName.length > 18) {
-                displayName = displayName.substring(0, 18) + '...';
-              }
-              
-              ctx.fillText(displayName, x + 70, y + 40);
-              
-              // UID
-              ctx.font = '18px "Segoe UI", Arial, sans-serif';
-              ctx.fillStyle = palette.text + 'cc';
-              ctx.fillText(`UID: ${dev.uid}`, x + 70, y + 70);
-              
-              // Status indicator
-              ctx.fillStyle = '#00ff88';
-              ctx.beginPath();
-              ctx.arc(x + 70, y + 100, 6, 0, Math.PI * 2);
-              ctx.fill();
-              
-              ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
-              ctx.fillStyle = palette.primary;
-              ctx.fillText('ACTIVE', x + 85, y + 105);
+            // Download profile picture
+            let profileImage = null;
+            try {
+              const profilePicPath = path.join(__dirname, `cache_profile_${dev.uid}_${Date.now()}.jpg`);
+              await downloadImage(dev.highResPic, profilePicPath);
+              profileImage = await Canvas.loadImage(profilePicPath);
+              fs.unlinkSync(profilePicPath); // Clean up
+            } catch (e) {
+              console.error("Failed to load profile image:", e.message);
             }
             
-            currentY += (Math.ceil(devs.length / devsPerRow) * (cardHeight + 20)) + 40;
+            // Profile card container
+            const cardWidth = canvasWidth - 100;
+            const cardHeight = 240;
+            const cardX = 50;
+            const cardY = currentY;
             
-            // Statistics box with gradient
-            const statsGradient = ctx.createLinearGradient(50, currentY, canvasWidth - 50, currentY + 80);
-            statsGradient.addColorStop(0, palette.primary + '40');
-            statsGradient.addColorStop(1, palette.secondary + '40');
+            // Card background with gradient
+            const cardGradient = ctx.createLinearGradient(cardX, cardY, cardX + cardWidth, cardY + cardHeight);
+            cardGradient.addColorStop(0, palette.cardBg);
+            cardGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
             
-            ctx.fillStyle = statsGradient;
-            ctx.roundRect(50, currentY, canvasWidth - 100, 80, 15);
+            ctx.fillStyle = cardGradient;
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 25);
             ctx.fill();
             
-            ctx.strokeStyle = palette.accent;
-            ctx.lineWidth = 2;
-            ctx.roundRect(50, currentY, canvasWidth - 100, 80, 15);
+            // Card border with glow
+            ctx.strokeStyle = palette.primary;
+            ctx.lineWidth = 3;
+            ctx.shadowColor = palette.primary;
+            ctx.shadowBlur = 15;
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 25);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // Profile picture frame
+            const picSize = 170;
+            const picX = cardX + 30;
+            const picY = cardY + 35;
+            
+            // Draw profile picture if available
+            if (profileImage) {
+              // Create circular mask for profile picture
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+              ctx.clip();
+              ctx.drawImage(profileImage, picX, picY, picSize, picSize);
+              ctx.restore();
+            } else {
+              // Placeholder if image fails
+              ctx.fillStyle = palette.secondary + '30';
+              ctx.beginPath();
+              ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+              ctx.fill();
+              
+              ctx.font = '40px "Segoe UI", Arial, sans-serif';
+              ctx.fillStyle = palette.primary;
+              ctx.textAlign = 'center';
+              ctx.fillText('👤', picX + picSize/2, picY + picSize/2 + 15);
+            }
+            
+            // Profile picture border
+            ctx.strokeStyle = palette.primary;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
             ctx.stroke();
             
-            ctx.font = 'bold 32px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.text;
-            ctx.textAlign = 'center';
-            ctx.fillText(`📊 TEAM STATISTICS: ${devs.length} DEVELOPERS`, canvasWidth / 2, currentY + 50);
+            // Developer number badge
+            ctx.fillStyle = palette.primary;
+            ctx.roundRect(picX + picSize - 40, picY + picSize - 40, 40, 40, 10);
+            ctx.fill();
             
-            currentY += 120;
+            ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'center';
+            ctx.fillText(`#${i+1}`, picX + picSize - 20, picY + picSize - 15);
+            
+            // Developer info section
+            const infoX = picX + picSize + 40;
+            const infoY = picY;
+            
+            // Developer name
+            ctx.font = 'bold 36px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = palette.primary;
+            ctx.textAlign = 'left';
+            ctx.fillText(dev.name, infoX, infoY + 40);
+            
+            // UID
+            ctx.font = '24px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = '#cccccc';
+            ctx.fillText(`🔑 UID: ${dev.uid}`, infoX, infoY + 85);
+            
+            // First name
+            ctx.fillText(`👤 First Name: ${dev.firstName}`, infoX, infoY + 125);
+            
+            // Added Date
+            ctx.fillText(`📅 Added: ${new Date().toLocaleDateString()}`, infoX, infoY + 165);
+            
+            // Status badge
+            ctx.fillStyle = '#00ff00' + '40';
+            ctx.roundRect(infoX + 400, infoY + 20, 120, 40, 10);
+            ctx.fill();
+            
+            ctx.font = 'bold 20px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = '#00ff00';
+            ctx.textAlign = 'center';
+            ctx.fillText('ACTIVE', infoX + 460, infoY + 46);
+            
+            // Role badge
+            ctx.fillStyle = palette.secondary + '40';
+            ctx.roundRect(infoX + 400, infoY + 70, 150, 40, 10);
+            ctx.fill();
+            
+            ctx.fillStyle = palette.secondary;
+            ctx.fillText('BOT DEVELOPER', infoX + 475, infoY + 96);
+            
+            currentY += cardHeight + 30;
+            
+            // Separator line between profiles
+            if (i < devs.length - 1) {
+              ctx.strokeStyle = palette.primary + '30';
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.moveTo(cardX, currentY - 10);
+              ctx.lineTo(cardX + cardWidth, currentY - 10);
+              ctx.stroke();
+              
+              currentY += 20;
+            }
           }
         }
+        else if (action === 'profile' && targetUsers.length === 1) {
+          // Single profile detailed view
+          const dev = devs[0];
+          
+          // Download high-res profile picture
+          let profileImage = null;
+          try {
+            const profilePicPath = path.join(__dirname, `cache_profile_detail_${dev.uid}.jpg`);
+            await downloadImage(dev.highResPic, profilePicPath);
+            profileImage = await Canvas.loadImage(profilePicPath);
+            fs.unlinkSync(profilePicPath);
+          } catch (e) {
+            console.error("Failed to load profile image:", e.message);
+          }
+          
+          // Large profile picture
+          const picSize = 300;
+          const picX = (canvasWidth - picSize) / 2;
+          const picY = currentY + 50;
+          
+          if (profileImage) {
+            // Draw profile picture with circular mask
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(profileImage, picX, picY, picSize, picSize);
+            ctx.restore();
+          }
+          
+          // Glowing border for profile picture
+          ctx.strokeStyle = palette.primary;
+          ctx.lineWidth = 6;
+          ctx.shadowColor = palette.primary;
+          ctx.shadowBlur = 30;
+          ctx.beginPath();
+          ctx.arc(picX + picSize/2, picY + picSize/2, picSize/2, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          
+          currentY += picSize + 80;
+          
+          // Developer name (large)
+          ctx.font = 'bold 48px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = palette.primary;
+          ctx.textAlign = 'center';
+          ctx.fillText(dev.name, canvasWidth / 2, currentY);
+          
+          currentY += 50;
+          
+          // Info container
+          const infoWidth = 800;
+          const infoX = (canvasWidth - infoWidth) / 2;
+          
+          ctx.fillStyle = palette.cardBg;
+          ctx.roundRect(infoX, currentY, infoWidth, 250, 25);
+          ctx.fill();
+          
+          ctx.strokeStyle = palette.primary;
+          ctx.lineWidth = 2;
+          ctx.roundRect(infoX, currentY, infoWidth, 250, 25);
+          ctx.stroke();
+          
+          // Info grid
+          const infoStartY = currentY + 50;
+          
+          // Left column
+          ctx.font = 'bold 28px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = palette.text;
+          ctx.textAlign = 'left';
+          
+          ctx.fillText(`🔑 User ID:`, infoX + 40, infoStartY);
+          ctx.fillText(`👤 First Name:`, infoX + 40, infoStartY + 60);
+          ctx.fillText(`📅 Added Date:`, infoX + 40, infoStartY + 120);
+          
+          // Right column (values)
+          ctx.font = '28px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = palette.primary;
+          
+          ctx.fillText(dev.uid, infoX + 300, infoStartY);
+          ctx.fillText(dev.firstName, infoX + 300, infoStartY + 60);
+          ctx.fillText(new Date().toLocaleDateString(), infoX + 300, infoStartY + 120);
+          
+          // Role badge
+          ctx.fillStyle = palette.secondary + '40';
+          ctx.roundRect(infoX + 500, infoStartY - 30, 200, 50, 15);
+          ctx.fill();
+          
+          ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = palette.secondary;
+          ctx.textAlign = 'center';
+          ctx.fillText('ADMIN DEVELOPER', infoX + 600, infoStartY + 5);
+          
+          currentY += 300;
+        }
         else if (action === 'add') {
-          // Success header with celebration
+          // Success message with added user profile
           ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = '#00ff88';
           ctx.textAlign = 'center';
-          ctx.fillText('🎉 NEW DEVELOPER ADDED!', canvasWidth / 2, currentY);
+          ctx.fillText('✅ DEVELOPER ADDED SUCCESSFULLY', canvasWidth / 2, currentY);
           
           currentY += 60;
           
-          // Success card with gradient
-          const successGradient = ctx.createLinearGradient(100, currentY, canvasWidth - 100, currentY + 180);
-          successGradient.addColorStop(0, '#00ff8840');
-          successGradient.addColorStop(1, '#00ff8810');
-          
-          ctx.fillStyle = successGradient;
-          ctx.roundRect(100, currentY, 800, 180, 20);
-          ctx.fill();
-          
-          ctx.strokeStyle = '#00ff88';
-          ctx.lineWidth = 3;
-          ctx.roundRect(100, currentY, 800, 180, 20);
-          ctx.stroke();
-          
-          // Success icon
-          ctx.font = '80px "Segoe UI", Arial, sans-serif';
-          ctx.fillStyle = '#00ff88';
-          ctx.textAlign = 'center';
-          ctx.fillText('✅', canvasWidth / 2, currentY + 100);
-          
-          currentY += 220;
-          
-          // Added users list
           if (targetUsers.length > 0) {
-            const addedInfo = await Promise.all(targetUsers.map(uid => getUserInfo(uid)));
+            const addedDev = await getUserInfo(targetUsers[0]);
             
-            ctx.font = 'bold 28px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.secondary;
+            // Show added developer profile
+            const cardWidth = 800;
+            const cardX = (canvasWidth - cardWidth) / 2;
+            
+            ctx.fillStyle = palette.cardBg;
+            ctx.roundRect(cardX, currentY, cardWidth, 180, 20);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.roundRect(cardX, currentY, cardWidth, 180, 20);
+            ctx.stroke();
+            
+            // Developer info
+            ctx.font = 'bold 32px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = palette.primary;
             ctx.textAlign = 'left';
-            ctx.fillText('Newly Added Developers:', 100, currentY);
+            ctx.fillText(addedDev.name, cardX + 30, currentY + 50);
             
-            currentY += 40;
+            ctx.font = '24px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = '#cccccc';
+            ctx.fillText(`UID: ${addedDev.uid}`, cardX + 30, currentY + 100);
             
-            ctx.font = '22px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.text;
+            // Success icon
+            ctx.font = '60px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = '#00ff88';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎉', cardX + 700, currentY + 90);
             
-            for (const user of addedInfo) {
-              ctx.fillText(`• ${user.name} (${user.uid})`, 120, currentY);
-              currentY += 35;
-            }
+            currentY += 220;
           }
         }
         else if (action === 'remove') {
-          // Removal header
+          // Removal message
           ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = '#ff5555';
           ctx.textAlign = 'center';
-          ctx.fillText('🗑️ DEVELOPER REMOVED', canvasWidth / 2, currentY);
+          ctx.fillText('❌ DEVELOPER REMOVED', canvasWidth / 2, currentY);
           
           currentY += 60;
           
-          // Removal card
-          const removeGradient = ctx.createLinearGradient(100, currentY, canvasWidth - 100, currentY + 180);
-          removeGradient.addColorStop(0, '#ff555540');
-          removeGradient.addColorStop(1, '#ff555510');
-          
-          ctx.fillStyle = removeGradient;
-          ctx.roundRect(100, currentY, 800, 180, 20);
-          ctx.fill();
-          
-          ctx.strokeStyle = '#ff5555';
-          ctx.lineWidth = 3;
-          ctx.roundRect(100, currentY, 800, 180, 20);
-          ctx.stroke();
-          
-          // Removal icon
-          ctx.font = '80px "Segoe UI", Arial, sans-serif';
-          ctx.fillStyle = '#ff5555';
-          ctx.textAlign = 'center';
-          ctx.fillText('❌', canvasWidth / 2, currentY + 100);
-          
-          currentY += 220;
-          
-          // Removed users list
           if (targetUsers.length > 0) {
-            const removedInfo = await Promise.all(targetUsers.map(uid => getUserInfo(uid)));
+            const removedDev = await getUserInfo(targetUsers[0]);
+            
+            const cardWidth = 800;
+            const cardX = (canvasWidth - cardWidth) / 2;
+            
+            ctx.fillStyle = 'rgba(255, 85, 85, 0.1)';
+            ctx.roundRect(cardX, currentY, cardWidth, 150, 20);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#ff5555';
+            ctx.lineWidth = 2;
+            ctx.roundRect(cardX, currentY, cardWidth, 150, 20);
+            ctx.stroke();
             
             ctx.font = 'bold 28px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.secondary;
+            ctx.fillStyle = '#ff5555';
             ctx.textAlign = 'left';
-            ctx.fillText('Removed Developers:', 100, currentY);
-            
-            currentY += 40;
+            ctx.fillText(removedDev.name, cardX + 30, currentY + 50);
             
             ctx.font = '22px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = palette.text;
+            ctx.fillStyle = '#cccccc';
+            ctx.fillText(`UID: ${removedDev.uid}`, cardX + 30, currentY + 100);
             
-            for (const user of removedInfo) {
-              ctx.fillText(`• ${user.name} (${user.uid})`, 120, currentY);
-              currentY += 35;
-            }
+            currentY += 200;
           }
         }
         else {
@@ -533,98 +641,96 @@ module.exports = {
           ctx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = palette.accent;
           ctx.textAlign = 'center';
-          ctx.fillText('📖 COMMAND REFERENCE', canvasWidth / 2, currentY);
+          ctx.fillText('⚙️ DEVELOPER SYSTEM COMMANDS', canvasWidth / 2, currentY);
           
-          currentY += 60;
+          currentY += 70;
+          
+          const commands = [
+            { icon: '👥', cmd: '/dev list', desc: 'Show all developer profiles with pictures' },
+            { icon: '👤', cmd: '/dev profile [uid]', desc: 'Show detailed profile of a developer' },
+            { icon: '➕', cmd: '/dev add [uid/@mention]', desc: 'Add new developer' },
+            { icon: '➖', cmd: '/dev remove [uid/@mention]', desc: 'Remove developer' },
+            { icon: '➕', cmd: '/dev add', desc: 'Add yourself as developer' },
+            { icon: '🎨', cmd: '/dev theme', desc: 'Show current theme info' },
+            { icon: '📊', cmd: '/dev stats', desc: 'Show developer statistics' }
+          ];
           
           // Commands container
           ctx.fillStyle = palette.cardBg;
-          ctx.roundRect(50, currentY, canvasWidth - 100, 400, 20);
+          ctx.roundRect(100, currentY, 1000, 350, 25);
           ctx.fill();
           
           ctx.strokeStyle = palette.primary;
           ctx.lineWidth = 2;
-          ctx.roundRect(50, currentY, canvasWidth - 100, 400, 20);
+          ctx.roundRect(100, currentY, 1000, 350, 25);
           ctx.stroke();
-          
-          const commands = [
-            { icon: '👥', cmd: '/dev list', desc: 'Show all active developers' },
-            { icon: '➕', cmd: '/dev add [uid]', desc: 'Add developer by UID' },
-            { icon: '➕', cmd: '/dev add @mention', desc: 'Add developer by mention' },
-            { icon: '➕', cmd: '/dev add', desc: 'Add yourself as developer' },
-            { icon: '➖', cmd: '/dev remove [uid]', desc: 'Remove developer by UID' },
-            { icon: '➖', cmd: '/dev remove @mention', desc: 'Remove developer by mention' },
-            { icon: '🎨', cmd: '/dev canvas', desc: 'Random colorful display' }
-          ];
           
           let yPos = currentY + 60;
           
           for (const command of commands) {
-            // Command icon
-            ctx.font = '24px "Segoe UI", Arial, sans-serif';
+            ctx.font = '28px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = palette.primary;
             ctx.textAlign = 'left';
-            ctx.fillText(command.icon, 80, yPos);
+            ctx.fillText(command.icon, 130, yPos);
             
-            // Command
             ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = palette.text;
-            ctx.fillText(command.cmd, 120, yPos);
+            ctx.fillText(command.cmd, 180, yPos);
             
-            // Description
             ctx.font = '22px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = palette.text + 'cc';
-            ctx.fillText(command.desc, 350, yPos);
+            ctx.fillText(command.desc, 400, yPos);
             
             yPos += 50;
           }
           
-          currentY = yPos + 30;
+          currentY = yPos + 40;
           
-          // Current theme info
-          ctx.fillStyle = palette.primary + '30';
-          ctx.roundRect(50, currentY, canvasWidth - 100, 80, 15);
+          // Current stats
+          ctx.fillStyle = palette.primary + '20';
+          ctx.roundRect(100, currentY, 1000, 80, 15);
           ctx.fill();
           
-          ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
-          ctx.fillStyle = palette.text;
+          ctx.font = 'bold 28px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = palette.primary;
           ctx.textAlign = 'center';
-          ctx.fillText(`🎨 Current Theme: ${palette.name} | 👥 Developers: ${devs.length}`, canvasWidth / 2, currentY + 50);
-          
-          currentY += 100;
+          ctx.fillText(`📊 CURRENT: ${devs.length} DEVELOPERS | 🎨 THEME: ${palette.name}`, canvasWidth / 2, currentY + 50);
         }
         
-        // Footer with gradient
-        const footerGradient = ctx.createLinearGradient(0, canvasHeight - 80, canvasWidth, canvasHeight);
+        // ========== FOOTER ==========
+        const footerHeight = 100;
+        
+        // Footer gradient
+        const footerGradient = ctx.createLinearGradient(0, canvasHeight - footerHeight, canvasWidth, canvasHeight);
         footerGradient.addColorStop(0, palette.primary + '40');
         footerGradient.addColorStop(1, palette.secondary + '40');
         
         ctx.fillStyle = footerGradient;
-        ctx.fillRect(0, canvasHeight - 80, canvasWidth, 80);
+        ctx.fillRect(0, canvasHeight - footerHeight, canvasWidth, footerHeight);
         
         // Footer text
-        ctx.font = 'bold 20px "Segoe UI", Arial, sans-serif';
+        ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
         ctx.fillStyle = palette.text;
         ctx.textAlign = 'center';
-        ctx.fillText('⚡ GoatBot Developer System v4.0', canvasWidth / 2, canvasHeight - 45);
+        ctx.fillText('⚡ GoatBot Developer System v5.1', canvasWidth / 2, canvasHeight - 60);
         
-        ctx.font = '16px "Segoe UI", Arial, sans-serif';
+        ctx.font = '18px "Segoe UI", Arial, sans-serif';
         ctx.fillStyle = palette.text + 'cc';
-        ctx.fillText('Every execution shows random colorful theme!', canvasWidth / 2, canvasHeight - 20);
+        ctx.fillText('All developer profiles with pictures displayed in one image', canvasWidth / 2, canvasHeight - 25);
         
-        // Bottom decorative line
+        // Bottom accent line
         ctx.fillStyle = palette.accent;
         ctx.fillRect(0, canvasHeight - 5, canvasWidth, 5);
         
         // Save the image
-        const imagePath = path.join(__dirname, 'cache', `dev_colorful_${Date.now()}.png`);
+        const imagePath = path.join(__dirname, 'cache', `dev_full_profile_${Date.now()}.png`);
         const buffer = canvas.toBuffer('image/png');
         fs.writeFileSync(imagePath, buffer);
         
         return imagePath;
         
       } catch (error) {
-        console.error("Error creating colorful canvas:", error);
+        console.error("Error creating profile canvas:", error);
         throw error;
       }
     };
@@ -654,8 +760,6 @@ module.exports = {
 
     const sub = (args[0] || "").toLowerCase();
 
-    // ========= ALL COMMANDS RETURN COLORFUL IMAGES =========
-    
     try {
       // Get current developers info
       const devs = await Promise.all(
@@ -670,6 +774,17 @@ module.exports = {
       if (sub === "list" || sub === "-l" || !sub) {
         actionType = 'list';
       } 
+      else if (sub === "profile" && args[1]) {
+        actionType = 'profile';
+        const uid = args[1];
+        if (cleanDevArray.includes(uid)) {
+          targetUsers = [uid];
+          // Get only this developer's info
+          const profileDev = await getUserInfo(uid);
+          devs.length = 0;
+          devs.push(profileDev);
+        }
+      }
       else if (sub === "add" || sub === "-a") {
         actionType = 'add';
         const uids = getUIDs();
@@ -719,33 +834,18 @@ module.exports = {
           }
         }
       }
-      else if (sub === "canvas" || sub === "-c") {
-        actionType = 'list'; // Canvas shows list in colorful way
+      else if (sub === "theme" || sub === "stats") {
+        actionType = 'help';
       }
       
-      // Get updated developers list if needed
-      const currentDevs = targetUsers.length > 0 ? 
-        await Promise.all(config.developer.map(uid => getUserInfo(uid))) : 
-        devs;
+      // Create full profile canvas
+      imagePath = await createFullProfileCanvas(devs, actionType, targetUsers);
       
-      // Create colorful canvas
-      imagePath = await createColorfulCanvas(currentDevs, actionType, targetUsers);
-      
-      // Create message based on action
-      let messageText = '';
-      switch(actionType) {
-        case 'list':
-          messageText = `🎨 ${palette.name} Theme | 👥 ${currentDevs.length} Developers`;
-          break;
-        case 'add':
-          messageText = `✅ Added ${targetUsers.length} developer(s)!`;
-          break;
-        case 'remove':
-          messageText = `❌ Removed ${targetUsers.length} developer(s)!`;
-          break;
-        default:
-          messageText = `📖 Developer System | 🎨 ${palette.name} Theme`;
-      }
+      // Create message
+      let messageText = `🎨 ${palette.name} Theme | 👥 ${devs.length} Developers`;
+      if (actionType === 'add') messageText = `✅ Added ${targetUsers.length} developer(s)!`;
+      if (actionType === 'remove') messageText = `❌ Removed ${targetUsers.length} developer(s)!`;
+      if (actionType === 'profile') messageText = `👤 Developer Profile`;
       
       // Send the image
       await message.reply({
@@ -753,14 +853,14 @@ module.exports = {
         attachment: fs.createReadStream(imagePath)
       });
       
-      // Clean up after 5 seconds
+      // Clean up
       setTimeout(() => {
         try { fs.unlinkSync(imagePath); } catch (e) {}
       }, 5000);
       
     } catch (error) {
       console.error("Error in developer system:", error);
-      return message.reply("❌ Error generating colorful image. Please try again.");
+      return message.reply("❌ Error generating profile image. Please try again.");
     }
   },
 
