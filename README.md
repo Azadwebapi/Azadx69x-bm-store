@@ -6,7 +6,9 @@
 
 🔥 𝕏𝟞𝟡𝕏 𝔹𝕆𝕋 𝕍𝟚 🔥
 
-https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=800&size=35&pause=1000&color=F728FF&center=true&vCenter=true&width=500&lines=✨+𝕏𝟞𝟡𝕏+𝔹𝕆𝕋+𝕍𝟚+✨;⚡+𝙼𝚄𝙻𝚃𝙸-𝙳𝙴𝚅𝙸𝙲𝙴+𝙱𝙾𝚃;🔥+𝙿𝙾𝚆𝙴𝚁𝙵𝚄𝙻+𝙰𝙳𝙼𝙸𝙽+𝚃𝙾𝙾𝙻𝚂;🎯+𝟸𝟺%2F𝟽+𝙰𝙲𝚃𝙸𝚅𝙴+𝚂𝙴𝚁𝚅𝙸𝙲𝙴;🚀+𝙱𝚈+𝙰𝚉𝙰𝙳𝚇𝟼𝟿𝚇
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=00FFFF&center=true&vCenter=true&width=435&lines=X69X+BOT+V2)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=FFD700&center=true&vCenter=true&width=435&lines=MESSENGER+MULTI-DEVICE+BOT)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=FF69B4&center=true&vCenter=true&width=435&lines=24%2F7+ACTIVE+SERVICE;Author+NTKhang+%7C+Update+by+Azadx69x)](https://git.io/typing-svg)
 
 <p align="center">
   <a href="https://github.com/ncazad/Azadx69x">
