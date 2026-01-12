@@ -495,7 +495,7 @@ module.exports = {
             ctx.fill();
             
             ctx.fillStyle = palette.secondary;
-            ctx.fillText('BOT DEVELOPER', infoX + 475, infoY + 96);
+            ctx.fillText('BOT DEVELOPER', infoX + 475, infoY + 90);
             
             currentY += cardHeight + 30;
             
