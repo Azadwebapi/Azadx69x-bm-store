@@ -37,7 +37,6 @@
 </a>
 
 </div>
----
 
 ### 📈 **𝙻𝙴𝚅𝙴𝙻 𝙿𝙴𝚁𝙼𝙸𝚂𝚂𝙸𝙾𝙽𝚂**
 
@@ -80,35 +79,15 @@
 !x69x credits   # 𝙳𝚎𝚟𝚎𝚕𝚘𝚙𝚎𝚛 𝚌𝚛𝚎𝚍𝚒𝚝𝚜
 !azad stats     # 𝙳𝚎𝚟𝚎𝚕𝚘𝚙𝚎𝚛 𝚜𝚝𝚊𝚝𝚜
 ```
-
-⚡ 𝙵𝚊𝚜𝚝 𝙵𝚎𝚊𝚝𝚞𝚛𝚎𝚜:
-
-· 🔥 𝚄𝚕𝚝𝚛𝚊 𝚏𝚊𝚜𝚝 𝚛𝚎𝚜𝚙𝚘𝚗𝚜𝚎
-· 🎯 𝚂𝚖𝚊𝚛𝚝 𝚌𝚊𝚌𝚑𝚒𝚗𝚐
-· 📡 𝚁𝚎𝚊𝚕-𝚝𝚒𝚖𝚎 𝚞𝚙𝚍𝚊𝚝𝚎𝚜
-· 🛡️ 𝙰𝚍𝚟𝚊𝚗𝚌𝚎𝚍 𝚜𝚎𝚌𝚞𝚛𝚒𝚝𝚢
-· 📱 𝙼𝚞𝚕𝚝𝚒-𝚍𝚎𝚟𝚒𝚌𝚎 𝚜𝚞𝚙𝚙𝚘𝚛𝚝
-· 🔔 𝙽𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚜𝚢𝚜𝚝𝚎𝚖
-
 ---
 
-🎪 𝚂𝚄𝙿𝙿𝙾𝚁𝚃 & 𝙲𝙾𝙼𝙼𝚄𝙽𝙸𝚃𝚈
+🪪 Connect & Support 
 
-<div align="center">
-
-<a href="https://github.com/ncazad">
-<img src="https://img.shields.io/badge/🐙+𝙶𝙸𝚃𝙷𝚄𝙱-181717?style=for-the-badge&logo=github&logoColor=white">
-</a>
-
-<a href="https://t.me/cyber_bot01">
-<img src="https://img.shields.io/badge/💬+𝚃𝙴𝙻𝙴𝙶𝚁𝙰𝙼-26A5E4?style=for-the-badge&logo=telegram&logoColor=white">
-</a>
-
-<a href="https://youtube.com/@cyberbotcommunity?si=7wqJsdLBRMvWkWOU">
-<img src="https://img.shields.io/badge/📺+𝚈𝙾𝚄𝚃𝚄𝙱𝙴-FF0000?style=for-the-badge&logo=youtube&logoColor=white">
-</a>
-
-</div>
+<p align="center">
+  <a href="https://www.facebook.com/azad69x">
+    <img src="https://img.shields.io/badge/CONNECT%20ON%20FACEBOOK-1877F2?style=flat-square&logo=facebook&logoColor=white">
+  </a>
+</p>
 
 ---
 
@@ -186,18 +165,6 @@ pie title 𝕏𝟞𝟡𝕏 𝔹𝕆𝕋 𝕍𝟚 𝚂𝚝𝚊𝚝𝚞𝚜
 ```
 
 </div>
-
----
-
-🚨 𝙳𝙸𝚂𝙲𝙻𝙰𝙸𝙼𝙴𝚁
-
-⚠️ 𝚃𝙷𝙸𝚂 𝙱𝙾𝚃 𝙸𝚂 𝙵𝙾𝚁 𝙴𝙳𝚄𝙲𝙰𝚃𝙸𝙾𝙽𝙰𝙻 𝙿𝚄𝚁𝙿𝙾𝚂𝙴𝚂 𝙾𝙽𝙻𝚈!
-
-📵 𝙳𝚘𝚗'𝚝 𝚞𝚜𝚎 𝚏𝚘𝚛 𝚜𝚙𝚊𝚖𝚖𝚒𝚗𝚐
-🚫 𝙳𝚘𝚗'𝚝 𝚟𝚒𝚘𝚕𝚊𝚝𝚎 𝚃𝙾𝚂
-🔒 𝚄𝚜𝚎 𝚊𝚝 𝚢𝚘𝚞𝚛 𝚘𝚠𝚗 𝚛𝚒𝚜𝚔
-👮 𝙳𝚎𝚟𝚎𝚕𝚘𝚙𝚎𝚛𝚜 𝚗𝚘𝚝 𝚛𝚎𝚜𝚙𝚘𝚗𝚜𝚒𝚋𝚕𝚎 𝚏𝚘𝚛 𝚖𝚒𝚜𝚞𝚜𝚎
-⚖️ 𝚁𝚎𝚜𝚙𝚎𝚌𝚝 𝙵𝚊𝚌𝚎𝚋𝚘𝚘𝚔'𝚜 𝚃𝚎𝚛𝚖𝚜 𝚘𝚏 𝚂𝚎𝚛𝚟𝚒𝚌𝚎
 
 ---
 
