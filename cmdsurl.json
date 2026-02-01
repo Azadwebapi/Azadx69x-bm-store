@@ -1,4 +1,5 @@
 { 
+  "api": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-top/refs/heads/main/cmd/api.js",
   "anisearch":"https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-top/refs/heads/main/cmd/anisearch.js",
   "admin": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-top/refs/heads/main/cmd/admin.js",
   "segs": "https://raw.githubusercontent.com/Azadwebapi/Azadx69x-blackmarket-api/refs/heads/main/cmd/segs.js",
