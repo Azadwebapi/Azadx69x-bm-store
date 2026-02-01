@@ -1,53 +1,75 @@
 const axios = require("axios");
-const FormData = require("form-data");
-const path = require("path");
-const mime = require("mime-types");
 
 module.exports = {
   config: {
     name: "catbox",
     aliases: ["cb"],
-    version: "1.0",
-    author: "Saimx69x",
+    version: "1.0.4",
     role: 0,
-    category: "utility",
-    Description: "Upload media to Catbox and return the link.",
-    guide: { en: "Reply to an image/video/file to upload it to Catbox.moe" },
+    author: "Azadx69x",
+    countDown: 0,
+    category: "catbox",
+    guide: {
+      en: "[reply with media or send a URL]"
+    }
   },
 
-  onStart: async function ({ api, event }) {
-    const attachment = event.messageReply?.attachments?.[0];
-    const attachmentUrl = attachment?.url;
+  onStart: async function ({ api, event, args }) {
+    await this.uploadMedia(api, event, args);
+  },
 
-    if (!attachmentUrl) {
-      return api.sendMessage("❌ Please reply to a media file to upload.", event.threadID, event.messageID);
+  uploadMedia: async function (api, event, args) {
+    let mediaUrl;
+    
+    const urlArg = args.join(" ");
+    if (urlArg && /^https?:\/\//i.test(urlArg)) {
+      mediaUrl = urlArg;
+    }
+    else if (
+      event.type === "message_reply" &&
+      event.messageReply &&
+      event.messageReply.attachments &&
+      event.messageReply.attachments.length > 0
+    ) {
+      mediaUrl = event.messageReply.attachments[0].url;
+    }
+    else if (event.attachments && event.attachments.length > 0) {
+      mediaUrl = event.attachments[0].url;
+    }
+    else {
+      return api.sendMessage(
+        "❌ No media detected. Please reply to media, attach one, or send a valid URL.",
+        event.threadID,
+        event.messageID
+      );
     }
 
-    const ext = path.extname(attachmentUrl.split("?")[0]) || ".bin";
-    const filename = "upload" + ext;
+    try {
+      const endpoint = `https://azadx69x-all-apis-top.vercel.app/api/catbox?url=${encodeURIComponent(mediaUrl)}`;
+      const res = await axios.get(endpoint, { timeout: 20000 });
+      const data = res.data;
 
-    api.setMessageReaction("🕒", event.messageID, async () => {
-      try {
-        const fileRes = await axios.get(attachmentUrl, { responseType: "stream" });
-
-        const form = new FormData();
-        form.append("reqtype", "fileupload");
-        form.append("fileToUpload", fileRes.data, {
-          filename: filename,
-          contentType: mime.lookup(ext) || "application/octet-stream",
-        });
-
-        const { data } = await axios.post("https://catbox.moe/user/api.php", form, {
-          headers: form.getHeaders(),
-        });
-
-        api.setMessageReaction("✅", event.messageID, () => {}, true);
-        api.sendMessage(data, event.threadID, event.messageID);
-      } catch (err) {
-        console.error("Upload error:", err.message);
-        api.setMessageReaction("❌", event.messageID, () => {}, true);
-        api.sendMessage("❌ Upload failed. File may not be supported.", event.threadID, event.messageID);
+      if (!data || !data.url) {
+        return api.sendMessage(
+          "❌ Upload failed or invalid response from API.",
+          event.threadID,
+          event.messageID
+        );
       }
-    }, true);
+
+      const reply = [
+        "✅ Upload Successful",
+        `🔗 URL: ${data.url}`
+      ].join("\n");
+
+      return api.sendMessage(reply, event.threadID, event.messageID);
+    } catch (err) {
+      console.error("Catbox API error:", err);
+      return api.sendMessage(
+        "❌ Error uploading media. Try again later.",
+        event.threadID,
+        event.messageID
+      );
+    }
   }
 };
