@@ -1,144 +1,162 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const path = require("path");
-
 module.exports = {
   config: {
     name: "pending",
-    version: "1.0.1",
-    author: "Azad 💥", //author change korle tor marechudi 
+    version: "1.1",
+    author: "Azadx69x",
+    countDown: 5,
     role: 2,
-    shortDescription: { en: "pending manager with video" },
-    category: "Admin"
+    shortDescription: {
+      vi: "Quản lý nhóm đang chờ phê duyệt",
+      en: "Manage pending group approvals"
+    },
+    longDescription: {
+      vi: "Lệnh quản trị để xem, chấp nhận hoặc từ chối các nhóm đang chờ tham gia bot\n\nCách sử dụng:\n• /pending - Hiển thị danh sách nhóm chờ\n• Trả lời với số - Chấp nhận nhóm\n• Trả lời với 'c' + số - Từ chối nhóm",
+      en: "Admin command to view, approve or reject groups waiting to add the bot\n\nUsage:\n• /pending - Show pending groups list\n• Reply with numbers - Approve groups\n• Reply with 'c' + numbers - Cancel/reject groups"
+    },
+    category: "Admin",
+    guide: {
+      vi: {
+        body: "{pn}: Xem danh sách nhóm đang chờ\n{pn} [số | c/số]: Phê duyệt/từ chối nhóm"
+      },
+      en: {
+        body: "{pn}: View pending groups list\n{pn} [number | c/number]: Approve/reject groups"
+      }
+    }
   },
 
   langs: {
     en: {
-      invalidNumber: `✦━━━━━━━━━━━━━━━━━✦   ⚠️ | 𝙏𝙝𝙚 𝙣𝙪𝙢𝙗𝙚𝙧 *%1* 𝙞𝙨 𝙣𝙤𝙩 𝙫𝙖𝙡𝙞𝙙! 💫   ➪▮▭▭▭▭▭▭▭▭▮〄`,
-      approveSuccess: `✦━━━━━━━━━━━━━━━━━✦
-
-🌸 | 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙖𝙥𝙥𝙧𝙤𝙫𝙚𝙙 %1 𝙜𝙧𝙤𝙪𝙥(𝙨)! ✨
-➪▮▭▭▭▭▭▭▭▭▮〄`,
-      cancelSuccess: `✦━━━━━━━━━━━━━━━━━✦
-
-💢 | 𝘾𝙖𝙣𝙘𝙚𝙡𝙡𝙚𝙙 %1 𝙜𝙧𝙤𝙪𝙥(𝙨)! ❌
-➪▮▭▭▭▭▭▭▭▭▮〄`,
-      returnListPending: `✦━━━━━━━━━━━━━━━━━✦
-
-📜 | 𝙋𝙚𝙣𝙙𝙞𝙣𝙜 𝙂𝙧𝙤𝙪𝙥𝙨 (%1):
-%2
-
-🩷 𝙍𝙚𝙥𝙡𝙮 𝙬𝙞𝙩𝙝 𝙩𝙝𝙚 𝙣𝙪𝙢𝙗𝙚𝙧(𝙨) 𝙩𝙤 𝙖𝙥𝙥𝙧𝙤𝙫𝙚
-💢 𝙏𝙮𝙥𝙚 \`cancel <num>\` 𝙩𝙤 𝙧𝙚𝙟𝙚𝙘𝙩
-➪▮▭▭▭▭▭▭▭▭▮〄`,
-      returnListClean: `✦━━━━━━━━━━━━━━━━━✦
-
-🌺 | 𝙉𝙤 𝙥𝙚𝙣𝙙𝙞𝙣𝙜 𝙂𝙧𝙤𝙪𝙥𝙨 𝙛𝙤𝙪𝙣𝙙! 💖
-➪▮▭▭▭▭▭▭▭▭▮〄`
+      invaildNumber: "❌ %1 is not a valid number",
+      cancelSuccess: "✅ Refused %1 thread(s)!",
+      approveSuccess: "✅ Approved successfully %1 thread(s)!",
+      cantGetPendingList: "❌ Can't get the pending list!",
+      returnListPending: "📋 »「PENDING LIST」«\n┣✦ Total threads: %1\n┣✦ Reply with numbers to approve\n┣✦ Use 'c' before numbers to cancel\n┗✦ Example: 1 2 3 or c1 c2\n\n%2",
+      returnListClean: "📭「PENDING」There are no pending groups at the moment",
+      syntaxError: "⚠️ Syntax error! Please use:\n• Numbers to approve (1 2 3)\n• 'c' + numbers to cancel (c1 c2)",
+      noPermission: "🚫 You don't have permission to use this command!"
+    },
+    vi: {
+      invaildNumber: "❌ %1 không phải là số hợp lệ",
+      cancelSuccess: "✅ Đã từ chối %1 nhóm!",
+      approveSuccess: "✅ Đã phê duyệt thành công %1 nhóm!",
+      cantGetPendingList: "❌ Không thể lấy danh sách chờ!",
+      returnListPending: "📋 »「DANH SÁCH CHỜ」«\n┣✦ Tổng số nhóm: %1\n┣✦ Phản hồi bằng số để chấp nhận\n┣✦ Dùng 'c' trước số để từ chối\n┗✦ Ví dụ: 1 2 3 hoặc c1 c2\n\n%2",
+      returnListClean: "📭「DANH SÁCH CHỜ」Hiện không có nhóm nào đang chờ",
+      syntaxError: "⚠️ Lỗi cú pháp! Vui lòng dùng:\n• Số để chấp nhận (1 2 3)\n• 'c' + số để từ chối (c1 c2)",
+      noPermission: "🚫 Bạn không có quyền sử dụng lệnh này!"
     }
   },
 
-  onStart: async function ({ api, event, getLang }) {
-    const { threadID, messageID } = event;
-    try {
-      // ✅ FIXED: merge BOTH PENDING + OTHER to catch all invites
-      const pending = await api.getThreadList(100, null, ["PENDING"]) || [];
-      const other = await api.getThreadList(100, null, ["OTHER"]) || [];
-      const list = [...pending, ...other].filter(g => g.isGroup);
-
-      if (!list.length) return api.sendMessage(getLang("returnListClean"), threadID, messageID);
-
-      const msg = list.map((g, i) => `🔹 ${i + 1}. 𝙉𝙖𝙢𝙚: *${g.name}* (\`${g.threadID}\`)`).join("\n");  
-      return api.sendMessage(getLang("returnListPending", list.length, msg), threadID, (err, info) => {  
-        global.GoatBot.onReply.set(info.messageID, {  
-          commandName: "pending",  
-          messageID: info.messageID,  
-          author: event.senderID,  
-          pending: list  
-        });  
-      }, messageID);  
-    } catch (err) {  
-      console.error(err);  
-      return api.sendMessage("❌ | Failed to fetch pending groups!", threadID, messageID);  
-    }
-  },
-
-  onReply: async function ({ api, event, Reply, getLang }) {
-    if (event.senderID !== Reply.author) return;
+  onReply: async function ({ api, event, Reply, getLang, commandName, args }) {
+    if (String(event.senderID) !== String(Reply.author)) return;
     const { body, threadID, messageID } = event;
+    let count = 0;
 
-    if (body.toLowerCase().startsWith("c") || body.toLowerCase().startsWith("cancel")) {  
-      const nums = body.replace(/^(c|cancel)/i, "").trim().split(/\s+/).map(n => parseInt(n));  
-      let count = 0;  
-      for (const n of nums) {  
-        if (isNaN(n) || n <= 0 || n > Reply.pending.length) {
-          await api.sendMessage(getLang("invalidNumber", n), threadID, messageID);
-          continue;
-        }
+    if (body.toLowerCase() === "help" || body === "?") {
+      return api.sendMessage(getLang("syntaxError"), threadID, messageID);
+    }
+
+    if ((isNaN(body) && body.toLowerCase().indexOf("c") == 0) || body.toLowerCase().indexOf("cancel") == 0) {
+      const index = (body.toLowerCase().slice(1)).split(/\s+/);
+      for (const i of index) {
+        if (isNaN(i) || i <= 0 || i > Reply.pending.length)
+          return api.sendMessage(getLang("invaildNumber", i), threadID, messageID);
         try {
-          await api.removeUserFromGroup(api.getCurrentUserID(), Reply.pending[n - 1].threadID);  
-          count++;  
-        } catch (err) {
-          console.error(`❌ Failed to cancel group ${n}:`, err.message);
+          api.removeUserFromGroup(api.getCurrentUserID(), Reply.pending[i - 1].threadID);
+          count++;
+        } catch (e) {
+          console.error("Error removing from group:", e);
         }
-      }  
-      return api.sendMessage(getLang("cancelSuccess", count), threadID, messageID);  
-    }  
+      }
+      return api.sendMessage(getLang("cancelSuccess", count), threadID, messageID);
+    } else {
+      const index = body.split(/\s+/);
+      for (const i of index) {
+        if (isNaN(i) || i <= 0 || i > Reply.pending.length)
+          return api.sendMessage(getLang("invaildNumber", i), threadID, messageID);
 
-    const index = body.split(/\s+/).map(n => parseInt(n)).filter(n => !isNaN(n) && n > 0 && n <= Reply.pending.length);  
-    if (!index.length) return api.sendMessage("⚠️ | Invalid group number(s)! 💫", threadID, messageID);  
+        const targetThread = Reply.pending[i - 1].threadID;
+        try {
+          const threadInfo = await api.getThreadInfo(targetThread);
+          const groupName = threadInfo.threadName || "Unnamed Group";
+          const memberCount = threadInfo.participantIDs.length;
+          const time = new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
+          
+          api.sendMessage(
+`╔═══════✦❖༺❖✦═══════╗
+┃
+┃➥🗃️ 𝙂𝙍𝙊𝙐𝙋 𝙉𝘼𝙈𝙀: ${groupName}
+┃➥🆔 𝙄𝘿: ${targetThread}
+┃➥👾 𝙈𝙀𝙈𝘽𝙀𝙍𝙎: ${memberCount}
+┃➥⚡ 𝘼𝙋𝙋𝙍𝙊𝙑𝘼𝙇 𝙈𝙊𝘿𝙀: ${threadInfo.approvalMode ? "🟢 𝙊𝙉" : "🔴 𝙊𝙁𝙁"}
+┃➥🎭 𝙀𝙈𝙊𝙅𝙄: ${threadInfo.emoji || "⚫ 𝙉𝙊𝙉𝙀"}
+┃➥⏰ 𝙅𝙊𝙄𝙉𝙀𝘿: ${time}
+┃➥🤖 𝘽𝙊𝙏 𝙊𝙒𝙉𝙀𝙍: 『𝘼 𝙕 𝘼 𝘿』
+┃➥🌐 𝙁𝘼𝘾𝙀𝘽𝙊𝙊𝙆: 𝘼𝙯𝙖𝙙𝙭𝟲𝟵𝙭
+┃➥🗺️ 𝘾𝙊𝙐𝙉𝙏𝙍𝙔: 𝘽𝙖𝙣𝙜𝙡𝙖𝙙𝙚𝙨𝙝
+┃➥📡 𝙒𝙃𝘼𝙏𝙎𝘼𝙋𝙋: 𝟬𝟭𝟵𝟳𝟰𝟳𝟲𝟮𝟰𝙭𝙭
+┃➥📧 𝙀𝙈𝘼𝙄𝙇: 𝙩𝙤𝙧𝙢𝙖𝙧𝙚𝙘𝙝𝙪𝙙𝙞@𝙜𝙢𝙖𝙞𝙡.𝙘𝙤𝙢
+┃
+╚═══════✦❖༺❖✦═══════╝
 
-    const uptimeMs = process.uptime() * 1000;  
-    const hours = Math.floor(uptimeMs / (1000 * 60 * 60));  
-    const minutes = Math.floor((uptimeMs % (1000 * 60 * 60)) / (1000 * 60));  
-    const seconds = Math.floor((uptimeMs % (1000 * 60)) / 1000);  
-    const uptime = `${hours}h ${minutes}m ${seconds}s`;  
+💡 𝙏𝙮𝙥𝙚 /𝙝𝙚𝙡𝙥 𝙩𝙤 𝙨𝙚𝙚 𝙖𝙡𝙡 𝙘𝙤𝙢𝙢𝙖𝙣𝙙𝙨
+✅ 𝘽𝙤𝙩 𝙞𝙨 𝙣𝙤𝙬 𝙖𝙘𝙩𝙞𝙫𝙚 𝙞𝙣 𝙩𝙝𝙞𝙨 𝙜𝙧𝙤𝙪𝙥!`, targetThread);
 
-    let count = 0;  
-    const videoUrl = "https://files.catbox.moe/qn8lrr.mp4";  
-    const videoPath = path.join(__dirname, "cache", "pending.mp4");  
-    await fs.ensureDir(path.join(__dirname, "cache"));  
+          count++;
+        } catch (error) {
+          console.error("Error approving group:", error);
+        }
+      }
+      return api.sendMessage(getLang("approveSuccess", count), threadID, messageID);
+    }
+  },
 
-    try {  
-      const response = await axios.get(videoUrl, { responseType: "arraybuffer" });  
-      fs.writeFileSync(videoPath, Buffer.from(response.data));  
-    } catch (err) {  
-      console.error("❌ Video download failed:", err.message);  
-    }  
+  onStart: async function ({ api, event, getLang, commandName, args }) {
+    const { threadID, messageID, senderID } = event;
+    
+    const adminIDs = [];
+    if (event.senderID !== api.getCurrentUserID() && !adminIDs.includes(senderID)) {
+      try {
+        const threadInfo = await api.getThreadInfo(threadID);
+        const isAdmin = threadInfo.adminIDs.some(admin => admin.id === senderID);
+        if (!isAdmin) {
+          return api.sendMessage(getLang("noPermission"), threadID, messageID);
+        }
+      } catch (e) {
+        console.error("Error checking admin:", e);
+      }
+    }
 
-    for (const i of index) {  
-      try {  
-        const tID = Reply.pending[i - 1].threadID;  
-        const threadInfo = await api.getThreadInfo(tID);  
-        const groupName = threadInfo.threadName || "Unnamed Group";  
-        const members = threadInfo.participantIDs.length;  
-        const approval = threadInfo.approvalMode ? "🟢 On" : "🔴 Off";  
-        const joined = new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dhaka', hour12: true });  
+    let msg = "", index = 1;
 
-        const text = `✦━━━━━━━━━━━━━━━━━✦
-🌸 𝙉𝙖𝙢𝙚: ${groupName}   
-🆔 𝙄𝘿: ${tID}   
-👥 𝙈𝙚𝙢𝙗𝙚𝙧𝙨: ${members}   
-🔒 𝘼𝙥𝙥𝙧𝙤𝙫𝙖𝙡: ${approval}   
-⏰ 𝙅𝙤𝙞𝙣𝙚𝙙: ${joined}   
-⚙️ 𝘽𝙤𝙩 𝙐𝙥𝙩𝙞𝙢𝙚: ${uptime}   
-👑 𝙊𝙬𝙣𝙚𝙧: your'azad   
-🔗 𝙁𝘽: https://www.facebook.com/profile.php?id=61578365162382   
-➪▮▭▭▭▭▭▭▭▭▮〄   
-🎬 𝙒𝙖𝙩𝙘𝙝 𝙩𝙝𝙚 𝙫𝙞𝙙𝙚𝙤 𝙗𝙚𝙡𝙤𝙬!`;
+    try {
+      const spam = await api.getThreadList(100, null, ["OTHER"]) || [];
+      const pending = await api.getThreadList(100, null, ["PENDING"]) || [];
+      const list = [...spam, ...pending].filter(group => group.isSubscribed && group.isGroup);
 
-        await api.sendMessage({  
-          body: text,  
-          attachment: fs.existsSync(videoPath) ? fs.createReadStream(videoPath) : null  
-        }, tID);  
+      if (list.length === 0) {
+        return api.sendMessage(getLang("returnListClean"), threadID, messageID);
+      }
 
-        count++;  
-      } catch (err) {  
-        console.error(`❌ Failed to send to one group:`, err.message);  
-      }  
-    }  
+      for (const item of list) {
+        const groupName = item.name || "Unnamed Group";
+        msg += `┣ ${index++}. ${groupName}\n   ┗ ID: ${item.threadID}\n`;
+      }
 
-    if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath);  
-    return api.sendMessage(getLang("approveSuccess", count), threadID, messageID);
+      const responseMsg = getLang("returnListPending", list.length, msg);
+      return api.sendMessage(responseMsg, threadID, (err, info) => {
+        if (err) return console.error(err);
+        global.GoatBot.onReply.set(info.messageID, {
+          commandName,
+          messageID: info.messageID,
+          author: event.senderID,
+          pending: list
+        });
+      }, messageID);
+
+    } catch (e) {
+      console.error("Error in pending command:", e);
+      return api.sendMessage(getLang("cantGetPendingList"), threadID, messageID);
+    }
   }
 };
