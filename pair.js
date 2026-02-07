@@ -7,14 +7,14 @@ module.exports = {
   config: {
     name: "pair",
     author: "Azadx69x",
-    version: "3.0",
+    version: "4.0",
     role: 0,
     category: "love",
     shortDescription: {
-      en: "💘 Generate a love match"
+      en: "💘 Find your perfect match"
     },
     longDescription: {
-      en: "Find your love match in the group"
+      en: "Discover your love compatibility with group members"
     },
     guide: {
       en: "{p}pair"
@@ -56,254 +56,340 @@ module.exports = {
         loadAvatar(matchID)
       ]);
       
-      // Create image with larger size for better background
-      const width = 1000;
-      const height = 600;
+      // Create image
+      const width = 1200;
+      const height = 675; // 16:9 ratio
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext("2d");
       
-      // === ULTIMATE BACKGROUND DESIGN ===
+      // === PREMIUM BACKGROUND DESIGN ===
       
-      // 1. MULTI-COLOR GRADIENT BACKGROUND
-      const gradient1 = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
-      gradient1.addColorStop(0, "#ff6b8b");
-      gradient1.addColorStop(0.3, "#ff4081");
-      gradient1.addColorStop(0.6, "#d81b60");
-      gradient1.addColorStop(1, "#8e24aa");
+      // 1. DEEP PURPLE TO PINK GRADIENT
+      const mainGradient = ctx.createLinearGradient(0, 0, width, height);
+      mainGradient.addColorStop(0, "#1a0b2e"); // Deep purple
+      mainGradient.addColorStop(0.3, "#451a6f"); // Royal purple
+      mainGradient.addColorStop(0.6, "#9c27b0"); // Violet
+      mainGradient.addColorStop(1, "#e91e63"); // Pink
       
-      const gradient2 = ctx.createLinearGradient(0, 0, width, height);
-      gradient2.addColorStop(0, "rgba(255, 107, 139, 0.8)");
-      gradient2.addColorStop(1, "rgba(142, 36, 170, 0.8)");
-      
-      ctx.fillStyle = gradient1;
+      ctx.fillStyle = mainGradient;
       ctx.fillRect(0, 0, width, height);
       
-      ctx.fillStyle = gradient2;
-      ctx.fillRect(0, 0, width, height);
-      
-      // 2. SPARKLE EFFECTS
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-      for (let i = 0; i < 50; i++) {
+      // 2. COSMIC STARFIELD EFFECT
+      ctx.fillStyle = "#ffffff";
+      for (let i = 0; i < 200; i++) {
         const x = Math.random() * width;
         const y = Math.random() * height;
-        const size = Math.random() * 4 + 1;
+        const size = Math.random() * 2 + 0.5;
+        const opacity = Math.random() * 0.8 + 0.2;
         
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
-        
-        // Add glow effect to some sparkles
-        if (i % 5 === 0) {
-          ctx.shadowColor = "#ffffff";
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.arc(x, y, size * 2, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
       }
+      ctx.globalAlpha = 1;
       
-      // 3. ANIMATED HEARTS BACKGROUND (Multiple layers)
-      const heartColors = [
-        "rgba(255, 64, 129, 0.3)",
-        "rgba(255, 107, 139, 0.4)",
-        "rgba(255, 182, 193, 0.3)",
-        "rgba(255, 255, 255, 0.2)"
+      // 3. GLOWING NEBULA EFFECTS
+      const nebulaColors = [
+        "rgba(156, 39, 176, 0.3)",  // Violet
+        "rgba(233, 30, 99, 0.25)",  // Pink
+        "rgba(103, 58, 183, 0.2)",   // Deep purple
+        "rgba(255, 64, 129, 0.15)"   // Light pink
       ];
       
-      // Layer 1: Small floating hearts
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 15; i++) {
         const x = Math.random() * width;
         const y = Math.random() * height;
-        const size = Math.random() * 25 + 10;
-        const colorIndex = Math.floor(Math.random() * heartColors.length);
+        const radius = Math.random() * 200 + 100;
+        const color = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
         
-        ctx.fillStyle = heartColors[colorIndex];
-        drawFloatingHeart(ctx, x, y, size);
+        const nebulaGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        nebulaGradient.addColorStop(0, color);
+        nebulaGradient.addColorStop(1, "transparent");
+        
+        ctx.fillStyle = nebulaGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
         ctx.fill();
       }
       
-      // Layer 2: Big hearts with borders
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 10; i++) {
-        const x = Math.random() * width;
-        const y = Math.random() * height;
-        const size = Math.random() * 60 + 40;
-        
-        drawHeart(ctx, x, y, size);
-        ctx.stroke();
-      }
-      
-      // 4. GEOMETRIC PATTERNS
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      // 4. GEOMETRIC GRID PATTERN
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
       ctx.lineWidth = 1;
       
-      // Diagonal lines
-      for (let i = -height; i < width * 2; i += 30) {
+      // Vertical lines
+      for (let x = 0; x <= width; x += 50) {
         ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i + height, height);
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
         ctx.stroke();
       }
       
-      // 5. GRADIENT OVERLAY FOR DEPTH
-      const overlayGradient = ctx.createLinearGradient(0, 0, 0, height);
-      overlayGradient.addColorStop(0, "rgba(142, 36, 170, 0.2)");
-      overlayGradient.addColorStop(0.5, "rgba(255, 64, 129, 0.1)");
-      overlayGradient.addColorStop(1, "rgba(255, 107, 139, 0.3)");
+      // Horizontal lines
+      for (let y = 0; y <= height; y += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
       
-      ctx.fillStyle = overlayGradient;
-      ctx.fillRect(0, 0, width, height);
+      // 5. FLOATING GEOMETRIC SHAPES
+      const shapes = [];
+      for (let i = 0; i < 8; i++) {
+        const shape = {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 60 + 20,
+          rotation: Math.random() * Math.PI * 2,
+          type: Math.floor(Math.random() * 3)
+        };
+        shapes.push(shape);
+      }
       
-      // 6. GLOWING BORDER
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 30;
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 15;
-      ctx.strokeRect(25, 25, width - 50, height - 50);
-      ctx.shadowBlur = 0;
+      shapes.forEach(shape => {
+        ctx.save();
+        ctx.translate(shape.x, shape.y);
+        ctx.rotate(shape.rotation);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.lineWidth = 2;
+        
+        if (shape.type === 0) {
+          // Triangle
+          ctx.beginPath();
+          ctx.moveTo(0, -shape.size);
+          ctx.lineTo(shape.size * 0.866, shape.size * 0.5);
+          ctx.lineTo(-shape.size * 0.866, shape.size * 0.5);
+          ctx.closePath();
+        } else if (shape.type === 1) {
+          // Hexagon
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i;
+            const x = Math.cos(angle) * shape.size;
+            const y = Math.sin(angle) * shape.size;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+        } else {
+          // Diamond
+          ctx.beginPath();
+          ctx.moveTo(0, -shape.size);
+          ctx.lineTo(shape.size, 0);
+          ctx.lineTo(0, shape.size);
+          ctx.lineTo(-shape.size, 0);
+          ctx.closePath();
+        }
+        
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      });
       
-      // Inner border
-      ctx.strokeStyle = "#ff6b8b";
-      ctx.lineWidth = 8;
-      ctx.strokeRect(40, 40, width - 80, height - 80);
+      // === MAIN CONTENT AREA ===
       
-      // === MAIN CONTENT ===
+      // Create a sleek modern card for content
+      const cardWidth = 1000;
+      const cardHeight = 450;
+      const cardX = (width - cardWidth) / 2;
+      const cardY = (height - cardHeight) / 2;
       
-      // Draw semi-transparent card for content
-      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-      roundRect(ctx, 100, 100, width - 200, height - 200, 40);
+      // Card with glass morphism effect
+      ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.lineWidth = 2;
+      
+      // Blur effect for glass
+      ctx.filter = "blur(10px)";
+      ctx.fillRect(cardX - 10, cardY - 10, cardWidth + 20, cardHeight + 20);
+      ctx.filter = "none";
+      
+      // Main card
+      roundRect(ctx, cardX, cardY, cardWidth, cardHeight, 30);
       ctx.fill();
-      
-      // Draw circles for avatars with glow effect
-      const circleRadius = 120;
-      
-      // Left circle (sender) with glow
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 20;
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 8;
-      ctx.beginPath();
-      ctx.arc(250, 300, circleRadius, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.shadowBlur = 0;
       
-      // Avatar for sender
+      // Inner card glow
+      ctx.strokeStyle = "rgba(233, 30, 99, 0.3)";
+      ctx.lineWidth = 4;
+      roundRect(ctx, cardX + 2, cardY + 2, cardWidth - 4, cardHeight - 4, 28);
+      ctx.stroke();
+      
+      // === PROFILE SECTIONS ===
+      
+      // Left profile section (Sender)
+      const leftX = cardX + 100;
+      const leftY = cardY + 100;
+      const profileSize = 180;
+      
+      // Profile container with gradient border
+      const profileGradient = ctx.createLinearGradient(leftX, leftY, leftX + profileSize, leftY + profileSize);
+      profileGradient.addColorStop(0, "#e91e63");
+      profileGradient.addColorStop(1, "#9c27b0");
+      
+      ctx.strokeStyle = profileGradient;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(leftX + profileSize/2, leftY + profileSize/2, profileSize/2 + 3, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Profile picture
       ctx.save();
       ctx.beginPath();
-      ctx.arc(250, 300, circleRadius, 0, Math.PI * 2);
+      ctx.arc(leftX + profileSize/2, leftY + profileSize/2, profileSize/2, 0, Math.PI * 2);
       ctx.clip();
       
       if (senderAvatar) {
-        ctx.drawImage(senderAvatar, 130, 180, 240, 240);
+        ctx.drawImage(senderAvatar, leftX, leftY, profileSize, profileSize);
       } else {
-        // Fallback design
-        ctx.fillStyle = "#ff4081";
-        ctx.fillRect(130, 180, 240, 240);
+        // Elegant fallback
+        ctx.fillStyle = "#e91e63";
+        ctx.fillRect(leftX, leftY, profileSize, profileSize);
         ctx.fillStyle = "white";
-        ctx.font = "bold 80px Arial";
+        ctx.font = "bold 70px 'Arial'";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(senderName.charAt(0).toUpperCase(), 250, 300);
+        ctx.fillText(senderName.charAt(0).toUpperCase(), leftX + profileSize/2, leftY + profileSize/2);
       }
       ctx.restore();
       
-      // Right circle (match) with glow
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 20;
-      ctx.beginPath();
-      ctx.arc(750, 300, circleRadius, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
+      // Name for sender
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(truncateText(senderName, 20), leftX + profileSize/2, leftY + profileSize + 50);
       
-      // Avatar for match
+      // Right profile section (Match)
+      const rightX = cardX + cardWidth - 100 - profileSize;
+      const rightY = cardY + 100;
+      
+      // Profile container with gradient border
+      const profileGradient2 = ctx.createLinearGradient(rightX, rightY, rightX + profileSize, rightY + profileSize);
+      profileGradient2.addColorStop(0, "#9c27b0");
+      profileGradient2.addColorStop(1, "#673ab7");
+      
+      ctx.strokeStyle = profileGradient2;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(rightX + profileSize/2, rightY + profileSize/2, profileSize/2 + 3, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Profile picture
       ctx.save();
       ctx.beginPath();
-      ctx.arc(750, 300, circleRadius, 0, Math.PI * 2);
+      ctx.arc(rightX + profileSize/2, rightY + profileSize/2, profileSize/2, 0, Math.PI * 2);
       ctx.clip();
       
       if (matchAvatar) {
-        ctx.drawImage(matchAvatar, 630, 180, 240, 240);
+        ctx.drawImage(matchAvatar, rightX, rightY, profileSize, profileSize);
       } else {
-        // Fallback design
-        ctx.fillStyle = "#ff4081";
-        ctx.fillRect(630, 180, 240, 240);
+        // Elegant fallback
+        ctx.fillStyle = "#9c27b0";
+        ctx.fillRect(rightX, rightY, profileSize, profileSize);
         ctx.fillStyle = "white";
-        ctx.font = "bold 80px Arial";
+        ctx.font = "bold 70px 'Arial'";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(matchName.charAt(0).toUpperCase(), 750, 300);
+        ctx.fillText(matchName.charAt(0).toUpperCase(), rightX + profileSize/2, rightY + profileSize/2);
       }
       ctx.restore();
       
-      // Animated connecting hearts line
-      for (let i = 0; i < 5; i++) {
-        const x = 250 + (i * 100);
-        const y = 300 + Math.sin(Date.now() / 1000 + i) * 10;
-        
-        ctx.fillStyle = i % 2 === 0 ? "#ff4081" : "#ffffff";
-        drawHeart(ctx, x, y, 20 + i * 5);
-        ctx.fill();
-      }
-      
-      // Big glowing heart in middle
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 25;
+      // Name for match
       ctx.fillStyle = "#ffffff";
-      drawHeart(ctx, 500, 300, 80);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      
-      // Names with glow effect
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 32px 'Segoe UI', Arial, sans-serif";
+      ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
       ctx.textAlign = "center";
+      ctx.fillText(truncateText(matchName, 20), rightX + profileSize/2, rightY + profileSize + 50);
       
-      const displaySenderName = truncateText(senderName, 15);
-      const displayMatchName = truncateText(matchName, 15);
+      // === CONNECTION LINE ===
       
-      ctx.fillText(displaySenderName, 250, 450);
-      ctx.fillText(displayMatchName, 750, 450);
-      ctx.shadowBlur = 0;
+      const centerX = width / 2;
+      const centerY = cardY + 190;
       
-      // Love percentage with stunning design
-      ctx.fillStyle = "rgba(255, 64, 129, 0.9)";
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 20;
-      roundRect(ctx, 400, 470, 200, 70, 35);
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      // Glowing connection line
+      ctx.strokeStyle = "#e91e63";
+      ctx.lineWidth = 4;
+      ctx.shadowColor = "#e91e63";
+      ctx.shadowBlur = 15;
       
-      // Inner glow for percentage box
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.lineWidth = 3;
-      roundRect(ctx, 400, 470, 200, 70, 35);
+      ctx.beginPath();
+      ctx.moveTo(leftX + profileSize + 30, centerY);
+      ctx.bezierCurveTo(
+        leftX + profileSize + 100, centerY - 50,
+        rightX - 100, centerY - 50,
+        rightX - 30, centerY
+      );
       ctx.stroke();
       
-      // Percentage text with glow
-      ctx.shadowColor = "#ffffff";
-      ctx.shadowBlur = 15;
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 40px 'Arial Rounded MT Bold', Arial, sans-serif";
-      ctx.fillText(`💖 ${lovePercent}%`, 500, 515);
       ctx.shadowBlur = 0;
       
-      // Decorative elements
+      // Connection dots
+      for (let i = 0; i < 5; i++) {
+        const t = i / 4;
+        const x = bezierPoint(leftX + profileSize + 30, leftX + profileSize + 100, rightX - 100, rightX - 30, t);
+        const y = bezierPoint(centerY, centerY - 50, centerY - 50, centerY, t);
+        
+        ctx.fillStyle = i % 2 === 0 ? "#e91e63" : "#9c27b0";
+        ctx.beginPath();
+        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Glow effect
+        ctx.shadowColor = i % 2 === 0 ? "#e91e63" : "#9c27b0";
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      
+      // === MATCH PERCENTAGE (ELEGANT DESIGN) ===
+      
+      const percentX = centerX;
+      const percentY = cardY + cardHeight - 120;
+      const percentSize = 120;
+      
+      // Outer circle with gradient
+      const percentGradient = ctx.createLinearGradient(
+        percentX - percentSize/2, percentY - percentSize/2,
+        percentX + percentSize/2, percentY + percentSize/2
+      );
+      percentGradient.addColorStop(0, "#e91e63");
+      percentGradient.addColorStop(1, "#673ab7");
+      
+      ctx.strokeStyle = percentGradient;
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.arc(percentX, percentY, percentSize/2 + 5, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Inner circle
+      ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.beginPath();
+      ctx.arc(percentX, percentY, percentSize/2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Percentage text (NO LOVE SYMBOL)
       ctx.fillStyle = "#ffffff";
-      ctx.font = "60px Arial";
+      ctx.font = "bold 40px 'Segoe UI', Arial, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("💘", 500, 200);
+      ctx.textBaseline = "middle";
+      ctx.fillText(`${lovePercent}%`, percentX, percentY);
       
-      // Title text
-      ctx.shadowColor = "#ff4081";
-      ctx.shadowBlur = 10;
+      // Small label below
+      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+      ctx.fillText("MATCH", percentX, percentY + 60);
+      
+      // === TITLE ===
+      
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 42px 'Brush Script MT', cursive";
-      ctx.fillText("Perfect Match Found!", 500, 100);
-      ctx.shadowBlur = 0;
+      ctx.font = "bold 42px 'Montserrat', 'Segoe UI', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("PERFECT MATCH FOUND", centerX, cardY + 50);
+      
+      // Subtitle
+      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.font = "22px 'Segoe UI', Arial, sans-serif";
+      ctx.fillText("Two hearts, one connection", centerX, cardY + 85);
       
       // Save image
       const imagePath = path.join(__dirname, "pair_match.png");
@@ -373,45 +459,6 @@ async function loadAvatar(uid) {
 }
 
 // Helper functions
-function drawHeart(ctx, x, y, size) {
-    ctx.save();
-    ctx.beginPath();
-    
-    const topCurveHeight = size * 0.3;
-    ctx.moveTo(x, y + topCurveHeight);
-    
-    // Left curve
-    ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
-    
-    // Left bottom curve
-    ctx.bezierCurveTo(x - size / 2, y + size / 2, x, y + size * 0.85, x, y + size);
-    
-    // Right bottom curve
-    ctx.bezierCurveTo(x, y + size * 0.85, x + size / 2, y + size / 2, x + size / 2, y + topCurveHeight);
-    
-    // Right curve
-    ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + topCurveHeight);
-    
-    ctx.closePath();
-    ctx.restore();
-}
-
-function drawFloatingHeart(ctx, x, y, size) {
-    ctx.save();
-    ctx.beginPath();
-    
-    // Create a more stylized heart for floating effect
-    ctx.moveTo(x, y + size * 0.25);
-    
-    ctx.bezierCurveTo(x, y, x - size * 0.4, y, x - size * 0.4, y + size * 0.25);
-    ctx.bezierCurveTo(x - size * 0.4, y + size * 0.5, x, y + size * 0.7, x, y + size);
-    ctx.bezierCurveTo(x, y + size * 0.7, x + size * 0.4, y + size * 0.5, x + size * 0.4, y + size * 0.25);
-    ctx.bezierCurveTo(x + size * 0.4, y, x, y, x, y + size * 0.25);
-    
-    ctx.closePath();
-    ctx.restore();
-}
-
 function roundRect(ctx, x, y, width, height, radius) {
     if (width < 2 * radius) radius = width / 2;
     if (height < 2 * radius) radius = height / 2;
@@ -432,4 +479,9 @@ function roundRect(ctx, x, y, width, height, radius) {
 function truncateText(text, maxLength) {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength - 3) + "...";
+}
+
+function bezierPoint(p0, p1, p2, p3, t) {
+    const c = 1 - t;
+    return c*c*c*p0 + 3*c*c*t*p1 + 3*c*t*t*p2 + t*t*t*p3;
 }
