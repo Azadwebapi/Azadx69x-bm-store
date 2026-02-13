@@ -526,22 +526,22 @@ module.exports = {
             { emoji: "⭐", text: `${Math.floor(level * 1.5)} PTS`, color: "#ffff00" }
           ];
 
-          let badgeX = 250;
+          let badgeStartX = 250;
           badges.forEach(badge => {
             ctx.shadowBlur = 15;
             ctx.shadowColor = badge.color;
             ctx.fillStyle = "rgba(0,0,0,0.5)";
-            ctx.fillRect(badgeX, 1230, 150, 50);
+            ctx.fillRect(badgeStartX, 1230, 150, 50);
             
             ctx.strokeStyle = badge.color;
             ctx.lineWidth = 2;
-            ctx.strokeRect(badgeX, 1230, 150, 50);
+            ctx.strokeRect(badgeStartX, 1230, 150, 50);
             
             ctx.font = "25px Arial";
             ctx.fillStyle = badge.color;
-            ctx.fillText(`${badge.emoji} ${badge.text}`, badgeX + 25, 1265);
+            ctx.fillText(`${badge.emoji} ${badge.text}`, badgeStartX + 25, 1265);
             
-            badgeX += 180;
+            badgeStartX += 180;
           });
 
           // ===== FOOTER =====
