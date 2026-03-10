@@ -334,27 +334,27 @@ module.exports = {
         "rgba(17, 94, 89, 0.3)"
       ]);
 
-      // Section titles with icons
+      // Section titles with icons - INSIDE the boxes
       ctx.shadowBlur = 10;
       ctx.shadowColor = "rgba(255, 215, 0, 0.3)";
       
       ctx.fillStyle = "#ffd700";
       ctx.font = "bold 32px 'Arial', 'Sans'";
       
-      // Owner section title
-      ctx.fillText("👤 𝐎𝐖𝐍𝐄𝐑", 80, cardStartY + 50);
+      // Owner section title - properly inside left box
+      ctx.fillText("👤 𝐎𝐖𝐍𝐄𝐑 𝐈𝐍𝐅𝐎", 80, cardStartY + 50);
       
-      // Bot section title
+      // Bot section title - properly inside right box
       ctx.fillText("🤖 𝐁𝐎𝐓 𝐒𝐓𝐀𝐓𝐒", 660, cardStartY + 50);
       
-      // System section title
-      ctx.fillText("💻 𝐒𝐘𝐒𝐓𝐄𝐌", 80, cardStartY + 560);
+      // System section title - properly inside bottom box
+      ctx.fillText("💻 𝐒𝐘𝐒𝐓𝐄𝐌 𝐈𝐍𝐅𝐎", 80, cardStartY + 560);
 
       ctx.shadowBlur = 0;
 
-      // ========== OWNER DETAILS ==========
+      // ========== OWNER DETAILS - PROPERLY INSIDE LEFT BOX ==========
       const ownerDetails = [
-        { icon: "📛", label: "Full Name", value: ownerInfo.fullName },
+        { icon: "📛", label: "Name", value: ownerInfo.fullName },
         { icon: "⚥", label: "Gender", value: ownerInfo.gender },
         { icon: "🎂", label: "Age", value: ownerInfo.age },
         { icon: "📅", label: "Birth", value: ownerInfo.birthDate },
@@ -375,26 +375,26 @@ module.exports = {
         
         // Label
         ctx.fillStyle = "#94a3b8";
-        ctx.font = "bold 18px 'Arial', 'Sans'";
-        ctx.fillText(detail.label, 100, yPos - 5);
+        ctx.font = "bold 16px 'Arial', 'Sans'";
+        ctx.fillText(detail.label, 100, yPos - 8);
         
-        // Value with premium styling
+        // Value
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 22px 'Arial', 'Sans'";
-        ctx.fillText(detail.value, 100, yPos + 15);
+        ctx.font = "18px 'Arial', 'Sans'";
+        ctx.fillText(detail.value, 100, yPos + 12);
         
         // Decorative line
         ctx.strokeStyle = "rgba(255, 215, 0, 0.2)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(60, yPos + 20);
-        ctx.lineTo(540, yPos + 20);
+        ctx.moveTo(60, yPos + 18);
+        ctx.lineTo(540, yPos + 18);
         ctx.stroke();
         
         yPos += lineHeight;
       });
 
-      // ========== BOT DETAILS ==========
+      // ========== BOT DETAILS - PROPERLY INSIDE RIGHT BOX ==========
       const botDetails = [
         { icon: "🤖", label: "Bot Name", value: botInfo.name },
         { icon: "📌", label: "Version", value: botInfo.version },
@@ -416,37 +416,43 @@ module.exports = {
         
         // Label
         ctx.fillStyle = "#94a3b8";
-        ctx.font = "bold 18px 'Arial', 'Sans'";
-        ctx.fillText(detail.label, 680, yPos - 5);
+        ctx.font = "bold 16px 'Arial', 'Sans'";
+        ctx.fillText(detail.label, 680, yPos - 8);
         
         // Value
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 22px 'Arial', 'Sans'";
-        ctx.fillText(detail.value, 680, yPos + 15);
+        ctx.font = "18px 'Arial', 'Sans'";
+        
+        // Truncate value if too long
+        let displayValue = detail.value;
+        if (detail.label === "Bot Name" && detail.value.length > 15) {
+          displayValue = detail.value.substring(0, 12) + "...";
+        }
+        ctx.fillText(displayValue, 680, yPos + 12);
         
         // Decorative line
         ctx.strokeStyle = "rgba(255, 215, 0, 0.2)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(640, yPos + 20);
-        ctx.lineTo(1120, yPos + 20);
+        ctx.moveTo(640, yPos + 18);
+        ctx.lineTo(1120, yPos + 18);
         ctx.stroke();
         
         yPos += lineHeight;
       });
 
-      // ========== SYSTEM INFO ==========
+      // ========== SYSTEM INFO - PROPERLY INSIDE BOTTOM BOX ==========
       const systemDetails = [
         { icon: "💾", label: "OS", value: os.type() },
         { icon: "⚙️", label: "CPU", value: cpuModel.substring(0, 25) + "..." },
         { icon: "🔢", label: "Cores", value: cpuCores.toString() },
-        { icon: "🧠", label: "RAM", value: `${totalMemory} GB (${freeMemory} GB free)` },
+        { icon: "🧠", label: "RAM", value: `${totalMemory} GB` },
         { icon: "🟢", label: "Node", value: process.version },
         { icon: "📟", label: "Platform", value: process.platform },
         { icon: "👤", label: "User", value: senderName }
       ];
 
-      // Two column layout
+      // Two column layout inside bottom box
       yPos = cardStartY + 610;
       const sysLineHeight = 48;
 
@@ -463,20 +469,26 @@ module.exports = {
         // Label
         ctx.fillStyle = "#94a3b8";
         ctx.font = "bold 16px 'Arial', 'Sans'";
-        ctx.fillText(detail.label, colX + 35, currentY - 5);
+        ctx.fillText(detail.label, colX + 35, currentY - 8);
         
         // Value
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 20px 'Arial', 'Sans'";
-        ctx.fillText(detail.value, colX + 35, currentY + 15);
+        ctx.font = "16px 'Arial', 'Sans'";
+        
+        // Adjust RAM display
+        let displayValue = detail.value;
+        if (detail.label === "RAM") {
+          displayValue = `${totalMemory} GB (${freeMemory} free)`;
+        }
+        ctx.fillText(displayValue, colX + 35, currentY + 12);
         
         // Decorative line for first column
         if (index < 4) {
           ctx.strokeStyle = "rgba(255, 215, 0, 0.2)";
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(colX, currentY + 20);
-          ctx.lineTo(540, currentY + 20);
+          ctx.moveTo(colX, currentY + 18);
+          ctx.lineTo(540, currentY + 18);
           ctx.stroke();
         }
       });
@@ -512,25 +524,31 @@ module.exports = {
       // Contact title
       ctx.fillStyle = "#ffd700";
       ctx.font = "bold 30px 'Arial', 'Sans'";
-      ctx.fillText("📱 𝐂𝐎𝐍𝐍𝐄𝐂𝐓 𝐖𝐈𝐓𝐇 𝐌𝐄", 600, contactY + 40);
+      ctx.fillText("📱 𝐂𝐎𝐍𝐍𝐄𝐂𝐓 𝐖𝐈𝐓𝐇 𝐌𝐄", 600, contactY + 45);
 
       // Contact icons in a row
       const contacts = [
-        { icon: "📧", value: ownerInfo.email },
-        { icon: "🌐", value: ownerInfo.website },
-        { icon: "📘", value: ownerInfo.facebook },
-        { icon: "💻", value: ownerInfo.github }
+        { icon: "📧", value: "azad@example.com" },
+        { icon: "🌐", value: "azadx69x.xyz" },
+        { icon: "📘", value: "Azad Hossain" },
+        { icon: "💻", value: "@azadx69x" }
       ];
 
-      let contactX = 200;
+      let contactX = 180;
       contacts.forEach(contact => {
         ctx.fillStyle = "#ffd700";
-        ctx.font = "28px 'Arial', 'Sans'";
+        ctx.font = "24px 'Arial', 'Sans'";
         ctx.fillText(contact.icon, contactX, contactY + 85);
         
         ctx.fillStyle = "#ffffff";
-        ctx.font = "18px 'Arial', 'Sans'";
-        ctx.fillText(contact.value, contactX + 35, contactY + 90);
+        ctx.font = "16px 'Arial', 'Sans'";
+        
+        // Truncate if too long
+        let displayValue = contact.value;
+        if (contact.value.length > 12) {
+          displayValue = contact.value.substring(0, 10) + "...";
+        }
+        ctx.fillText(displayValue, contactX + 30, contactY + 90);
         
         contactX += 250;
       });
